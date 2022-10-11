@@ -961,7 +961,7 @@ function _assignRenderer(newBid, request) {
  * @param {*} request
  * @returns
  */
- export function assignDealTier(newBid, bid, request) {
+export function assignDealTier(newBid, bid, request) {
   if (!bid?.ext?.prebiddealpriority) return;
   const bidRequest = getBidRequest(newBid.requestId, [request.bidderRequest]);
   const videoObj = deepAccess(bidRequest, 'mediaTypes.video');
