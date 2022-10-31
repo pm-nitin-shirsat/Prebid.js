@@ -965,7 +965,7 @@ export function assignDealTier(newBid, bid, request) {
   if (!bid?.ext?.prebiddealpriority) return;
   const bidRequest = getBidRequest(newBid.requestId, [request.bidderRequest]);
   const videoObj = deepAccess(bidRequest, 'mediaTypes.video');
-  if (videoObj?.context != ADPOD) return;
+  //if (videoObj?.context != ADPOD) return;
 
   const duration = bid?.ext?.video?.duration || videoObj?.maxduration;
   // if (!duration) return;

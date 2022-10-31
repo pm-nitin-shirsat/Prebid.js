@@ -239,7 +239,7 @@ function firePrebidCacheCall(auctionInstance, bidList, afterBidAdded) {
  * @param {Object} videoConfig mediaTypes.video from the bid's adUnit
  */
 export function callPrebidCacheHook(fn, auctionInstance, bidResponse, afterBidAdded, videoConfig) {
-  if (videoConfig && videoConfig.context === ADPOD) {
+  // if (videoConfig && videoConfig.context === ADPOD) {
     let brandCategoryExclusion = config.getConfig('adpod.brandCategoryExclusion');
     let adServerCatId = deepAccess(bidResponse, 'meta.adServerCatId');
     if (!adServerCatId && brandCategoryExclusion) {
@@ -261,9 +261,9 @@ export function callPrebidCacheHook(fn, auctionInstance, bidResponse, afterBidAd
         afterBidAdded();
       }
     }
-  } else {
-    fn.call(this, auctionInstance, bidResponse, afterBidAdded, videoConfig);
-  }
+  // } else {
+  //   fn.call(this, auctionInstance, bidResponse, afterBidAdded, videoConfig);
+  // }
 }
 
 /**
