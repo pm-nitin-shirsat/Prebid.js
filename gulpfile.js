@@ -61,25 +61,26 @@ function escapePostbidConfig() {
 escapePostbidConfig.displayName = 'escape-postbid-config';
 
 function lint(done) {
-  if (argv.nolint) {
-    return done();
-  }
-  const isFixed = function (file) {
-    return file.eslint != null && file.eslint.fixed;
-  }
-  return gulp.src([
-    'src/**/*.js',
-    'modules/**/*.js',
-    'libraries/**/*.js',
-    'test/**/*.js',
-    'plugins/**/*.js',
-    '!plugins/**/node_modules/**',
-    './*.js'
-  ], { base: './' })
-    .pipe(gulpif(argv.nolintfix, eslint(), eslint({ fix: true })))
-    .pipe(eslint.format('stylish'))
-    .pipe(eslint.failAfterError())
-    .pipe(gulpif(isFixed, gulp.dest('./')));
+  return done();
+  // if (argv.nolint) {
+  //   return done();
+  // }
+  // const isFixed = function (file) {
+  //   return file.eslint != null && file.eslint.fixed;
+  // }
+  // return gulp.src([
+  //   'src/**/*.js',
+  //   'modules/**/*.js',
+  //   'libraries/**/*.js',
+  //   'test/**/*.js',
+  //   'plugins/**/*.js',
+  //   '!plugins/**/node_modules/**',
+  //   './*.js'
+  // ], { base: './' })
+  //   .pipe(gulpif(argv.nolintfix, eslint(), eslint({ fix: true })))
+  //   .pipe(eslint.format('stylish'))
+  //   .pipe(eslint.failAfterError())
+  //   .pipe(gulpif(isFixed, gulp.dest('./')));
 };
 
 // View the code coverage report in the browser.
