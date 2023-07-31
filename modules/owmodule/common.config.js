@@ -1,7 +1,7 @@
-var config = require('./conf.js');
-var CONSTANTS = require('./constants.js');
+import * as config from './conf.js';
+import * as CONSTANTS from './constants.js';
 
-exports.getGdprActionTimeout = function() {
-  var gdprActionTimeout = config[CONSTANTS.CONFIG.COMMON][CONSTANTS.CONFIG.GDPR_ACTION_TIMEOUT];
+export function getGdprActionTimeout() {
+  const gdprActionTimeout = config[CONSTANTS.CONFIG.COMMON][CONSTANTS.CONFIG.GDPR_ACTION_TIMEOUT];
   return gdprActionTimeout ? window.parseInt(gdprActionTimeout) : 0;
-};
+}

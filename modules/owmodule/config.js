@@ -1,71 +1,71 @@
-import * as config from "./conf.js";
-import * as CONSTANTS from "./constants.js";
-import * as util from "./util.js";
+import * as config from './conf.js';
+import * as CONSTANTS from './constants.js';
+import * as util from './util.js';
 
 
-var refThis = null;
-refThis = this;
-refThis[CONSTANTS.COMMON.OWVERSION] = config[CONSTANTS.CONFIG.COMMON][CONSTANTS.COMMON.OWVERSION];
-refThis[CONSTANTS.COMMON.PBVERSION] = config[CONSTANTS.CONFIG.COMMON][CONSTANTS.COMMON.PBVERSION];
 
-exports.getPublisherId = function () {
+this[CONSTANTS.COMMON.OWVERSION] = config[CONSTANTS.CONFIG.COMMON][CONSTANTS.COMMON.OWVERSION];
+this[CONSTANTS.COMMON.PBVERSION] = config[CONSTANTS.CONFIG.COMMON][CONSTANTS.COMMON.PBVERSION];
+
+export function getPublisherId() {
   return util.trim(config.pwt.pubid) || '0';
-};
+}
 
 // removeIf(removeLegacyAnalyticsRelatedCode)
-exports.getMataDataPattern = function() {
+export function getMataDataPattern() {
   if (util.isString(config[CONSTANTS.CONFIG.COMMON][CONSTANTS.CONFIG.META_DATA_PATTERN])) {
     return config[CONSTANTS.CONFIG.COMMON][CONSTANTS.CONFIG.META_DATA_PATTERN];
   }
   return null;
-};
+}
+
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
-exports.getSendAllBidsStatus = function () {
+export function getSendAllBidsStatus() {
   return window.parseInt(config[CONSTANTS.CONFIG.COMMON][CONSTANTS.CONFIG.SEND_ALL_BIDS]) || 0;
-};
+}
 
-exports.getTimeout = function () {
+export function getTimeout() {
   return window.parseInt(config.pwt.t) || 1000;
-};
+}
 
-exports.getDisableAjaxTimeout = function () {
-  var pwt = config.pwt;
+export function getDisableAjaxTimeout() {
+  const pwt = config.pwt;
   if (util.isOwnProperty(pwt, CONSTANTS.CONFIG.DISABLE_AJAX_TIMEOUT)) {
     return config.pwt.disableAjaxTimeout == true;
   }
   return true;
-};
+}
 
-exports.getAdapterRevShare = function (adapterID) {
-  var adapterConfig = config.adapters;
+export function getAdapterRevShare(adapterID) {
+  const adapterConfig = config.adapters;
   if (util.isOwnProperty(adapterConfig[adapterID], CONSTANTS.CONFIG.REV_SHARE)) {
     return (1 - window.parseFloat(adapterConfig[adapterID][CONSTANTS.CONFIG.REV_SHARE]) / 100);
   }
   return 1;
-};
+}
 
-exports.getAdapterThrottle = function (adapterID) {
-  var adapterConfig = config.adapters;
+export function getAdapterThrottle(adapterID) {
+  const adapterConfig = config.adapters;
   if (util.isOwnProperty(adapterConfig[adapterID], CONSTANTS.CONFIG.THROTTLE)) {
     return 100 - window.parseFloat(adapterConfig[adapterID][CONSTANTS.CONFIG.THROTTLE]);
   }
   return 0;
-};
+}
 
-exports.isServerSideAdapter = function (adapterID) {
-  var adapterConfig = config.adapters;
+export function isServerSideAdapter(adapterID) {
+  const adapterConfig = config.adapters;
   /* istanbul ignore else */
   if (adapterConfig[adapterID] && util.isOwnProperty(adapterConfig[adapterID], CONSTANTS.CONFIG.SERVER_SIDE_ENABLED)) {
     return window.parseInt(adapterConfig[adapterID][CONSTANTS.CONFIG.SERVER_SIDE_ENABLED]) === 1;
   }
   return false;
-};
+}
 
 // removeIf(removeLegacyAnalyticsRelatedCode)
-exports.getAdapterMaskBidsStatus = function(adapterID) {
-  var adapterConfig = config.adapters;
-  var tempSettings = {
+export function getAdapterMaskBidsStatus(adapterID) {
+  const adapterConfig = config.adapters;
+  const tempSettings = {
     'audienceNetwork': 1
   };
 
@@ -78,45 +78,48 @@ exports.getAdapterMaskBidsStatus = function(adapterID) {
   }
   return 0;
 }
+
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
 // TODO: do we need this feature?
-exports.getBidPassThroughStatus = function(adapterID) {
-  var adapterConfig = config.adapters;
+export function getBidPassThroughStatus(adapterID) {
+  const adapterConfig = config.adapters;
   if (util.isOwnProperty(adapterConfig[adapterID], CONSTANTS.CONFIG.BID_PASS_THROUGH)) {
     return window.parseInt(adapterConfig[adapterID][CONSTANTS.CONFIG.BID_PASS_THROUGH]);
   }
   return 0;
-};
+}
 
-exports.getProfileID = function () {
+export function getProfileID() {
   return util.trim(config.pwt[CONSTANTS.CONFIG.PROFILE_ID]) || '0';
-};
+}
 
-exports.getProfileDisplayVersionID = function () {
+export function getProfileDisplayVersionID() {
   return util.trim(config.pwt[CONSTANTS.CONFIG.PROFILE_VERSION_ID]) || '0';
-};
+}
 
 // removeIf(removeLegacyAnalyticsRelatedCode)
-exports.getAnalyticsPixelURL = function() {
+export function getAnalyticsPixelURL() {
   return config.pwt[CONSTANTS.CONFIG.LOGGER_URL] || false;
-};
+}
+
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
 // removeIf(removeLegacyAnalyticsRelatedCode)
-exports.getMonetizationPixelURL = function() {
+export function getMonetizationPixelURL() {
   return config.pwt[CONSTANTS.CONFIG.TRACKER_URL] || false;
-};
+}
+
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
-exports.forEachAdapter = function (callback) {
+export function forEachAdapter(callback) {
   util.forEachOnObject(config.adapters, callback);
-};
+}
 
 function addPrebidAdapter() {
-  var preBidAdapter = CONSTANTS.COMMON.PARENT_ADAPTER_PREBID;
+  const preBidAdapter = CONSTANTS.COMMON.PARENT_ADAPTER_PREBID;
   if (!util.isOwnProperty(config.adapters, preBidAdapter)) {
-    var adapterConfig = {};
+    const adapterConfig = {};
     adapterConfig[CONSTANTS.CONFIG.REV_SHARE] = '0.0';
     adapterConfig[CONSTANTS.CONFIG.THROTTLE] = '100';
     adapterConfig[CONSTANTS.CONFIG.KEY_GENERATION_PATTERN] = '_DIV_';
@@ -125,27 +128,27 @@ function addPrebidAdapter() {
   }
 }
 
-exports.getGdpr = function () {
-  var gdpr = config[CONSTANTS.CONFIG.COMMON][CONSTANTS.CONFIG.GDPR_CONSENT] || CONSTANTS.CONFIG.DEFAULT_GDPR_CONSENT;
+export function getGdpr() {
+  const gdpr = config[CONSTANTS.CONFIG.COMMON][CONSTANTS.CONFIG.GDPR_CONSENT] || CONSTANTS.CONFIG.DEFAULT_GDPR_CONSENT;
   return gdpr === '1';
-};
+}
 
-exports.getCmpApi = function () {
+export function getCmpApi() {
   return config[CONSTANTS.CONFIG.COMMON][CONSTANTS.CONFIG.GDPR_CMPAPI] || CONSTANTS.CONFIG.DEFAULT_GDPR_CMPAPI;
-};
+}
 
-exports.getGdprTimeout = function () {
-  var gdprTimeout = config[CONSTANTS.CONFIG.COMMON][CONSTANTS.CONFIG.GDPR_TIMEOUT];
+export function getGdprTimeout() {
+  const gdprTimeout = config[CONSTANTS.CONFIG.COMMON][CONSTANTS.CONFIG.GDPR_TIMEOUT];
   return gdprTimeout ? window.parseInt(gdprTimeout) : CONSTANTS.CONFIG.DEFAULT_GDPR_TIMEOUT;
-};
+}
 
-exports.getAwc = function () {
-  var awc = config[CONSTANTS.CONFIG.COMMON][CONSTANTS.CONFIG.GDPR_AWC] || CONSTANTS.CONFIG.DEFAULT_GDPR_AWC;
+export function getAwc() {
+  const awc = config[CONSTANTS.CONFIG.COMMON][CONSTANTS.CONFIG.GDPR_AWC] || CONSTANTS.CONFIG.DEFAULT_GDPR_AWC;
   return awc === '1';
-};
+}
 
-exports.getOverrideNamespace = function(configKey, defaultName, returnValueInCaseMissingNamespace) {
-  var pbNamespace = config[CONSTANTS.CONFIG.COMMON][configKey];
+export function getOverrideNamespace(configKey, defaultName, returnValueInCaseMissingNamespace) {
+  const pbNamespace = config[CONSTANTS.CONFIG.COMMON][configKey];
   if (pbNamespace) {
     return pbNamespace === defaultName ? returnValueInCaseMissingNamespace : pbNamespace;
   } else {
@@ -154,34 +157,35 @@ exports.getOverrideNamespace = function(configKey, defaultName, returnValueInCas
 }
 
 /* start-test-block */
-exports.addPrebidAdapter = addPrebidAdapter;
+export {addPrebidAdapter};
+
 /* end-test-block */
 
-exports.initConfig = function () {
-  refThis.updateABTestConfig();
-  refThis.addPrebidAdapter();
+export function initConfig() {
+  updateABTestConfig();
+  addPrebidAdapter();
 
-  var ignoreAdapterLevelParams = {};
-  util.forEachOnObject(CONSTANTS.CONFIG, function (key, value) {
+  const ignoreAdapterLevelParams = {};
+  util.forEachOnObject(CONSTANTS.CONFIG, (key, value) => {
     ignoreAdapterLevelParams[value] = '';
   });
 
-  util.forEachOnObject(config.adapters, function (adapterID, adapterConfig) {
-    var adapterLevelParams = {};
-    util.forEachOnObject(adapterConfig, function (key, value) {
+  util.forEachOnObject(config.adapters, (adapterID, adapterConfig) => {
+    const adapterLevelParams = {};
+    util.forEachOnObject(adapterConfig, (key, value) => {
       if (!util.isOwnProperty(ignoreAdapterLevelParams, key)) {
         adapterLevelParams[key] = value;
       }
     });
-    util.forEachOnObject(adapterConfig[CONSTANTS.CONFIG.KEY_LOOKUP_MAP], function (kgpv, slotLevelParams) {
-      util.forEachOnObject(adapterLevelParams, function (key, value) {
+    util.forEachOnObject(adapterConfig[CONSTANTS.CONFIG.KEY_LOOKUP_MAP], (kgpv, slotLevelParams) => {
+      util.forEachOnObject(adapterLevelParams, (key, value) => {
         slotLevelParams[key] = value;
       });
     });
 
     if (adapterID != 'pubmatic' && adapterID != 'pubmatic2') {
-      util.forEachOnObject(adapterConfig[CONSTANTS.CONFIG.REGEX_KEY_LOOKUP_MAP], function (kgpv, slotLevelParams) {
-        util.forEachOnObject(adapterLevelParams, function (key, value) {
+      util.forEachOnObject(adapterConfig[CONSTANTS.CONFIG.REGEX_KEY_LOOKUP_MAP], (kgpv, slotLevelParams) => {
+        util.forEachOnObject(adapterLevelParams, (key, value) => {
           if (util.isOwnProperty(slotLevelParams, 'rx_config')) {
             slotLevelParams['rx_config'][key] = value;
           }
@@ -189,164 +193,167 @@ exports.initConfig = function () {
       });
     }
   });
-};
+}
 
 /* Native Configuration */
 
-exports.getNativeConfiguration = function () {
+export function getNativeConfiguration() {
   return config[CONSTANTS.COMMON.NATIVE_MEDIA_TYPE_CONFIG];
-};
+}
 
-exports.getAdServerCurrency = function () {
+export function getAdServerCurrency() {
   return config[CONSTANTS.CONFIG.COMMON][CONSTANTS.COMMON.AD_SERVER_CURRENCY];
-};
+}
 
-exports.isSingleImpressionSettingEnabled = function () {
+export function isSingleImpressionSettingEnabled() {
   return parseInt(config[CONSTANTS.CONFIG.COMMON][CONSTANTS.COMMON.SINGLE_IMPRESSION] || CONSTANTS.CONFIG.DEFAULT_SINGLE_IMPRESSION);
-};
+}
 
-exports.isUserIdModuleEnabled = function () {
+export function isUserIdModuleEnabled() {
   return parseInt(config[CONSTANTS.CONFIG.COMMON][CONSTANTS.COMMON.ENABLE_USER_ID] || CONSTANTS.CONFIG.DEFAULT_USER_ID_MODULE);
-};
+}
 
-exports.getIdentityPartners = function () {
+export function getIdentityPartners() {
   return config[CONSTANTS.COMMON.IDENTITY_PARTNERS];
-};
+}
 
-exports.isIdentityOnly = function () {
+export function isIdentityOnly() {
   return parseInt(config[CONSTANTS.CONFIG.COMMON][CONSTANTS.COMMON.IDENTITY_ONLY] || CONSTANTS.CONFIG.DEFAULT_IDENTITY_ONLY);
-};
+}
 
-exports.getIdentityConsumers = function () {
+export function getIdentityConsumers() {
   return (config[CONSTANTS.CONFIG.COMMON][CONSTANTS.COMMON.IDENTITY_CONSUMERS] || '').toLowerCase();
-};
+}
 
-exports.getSlotConfiguration = function () {
+export function getSlotConfiguration() {
   return config[CONSTANTS.COMMON.SLOT_CONFIG];
-};
+}
 
-exports.getAdServer = function () {
+export function getAdServer() {
   return config[CONSTANTS.COMMON.ADSERVER];
-};
-exports.getCCPA = function () {
-  var ccpa = config[CONSTANTS.CONFIG.COMMON][CONSTANTS.CONFIG.CCPA_CONSENT] || CONSTANTS.CONFIG.DEFAULT_CCPA_CONSENT;
+}
+
+export function getCCPA() {
+  const ccpa = config[CONSTANTS.CONFIG.COMMON][CONSTANTS.CONFIG.CCPA_CONSENT] || CONSTANTS.CONFIG.DEFAULT_CCPA_CONSENT;
   return ccpa === '1';
-};
+}
 
-exports.getCCPACmpApi = function () {
+export function getCCPACmpApi() {
   return config[CONSTANTS.CONFIG.COMMON][CONSTANTS.CONFIG.CCPA_CMPAPI] || CONSTANTS.CONFIG.DEFAULT_CCPA_CMPAPI;
-};
+}
 
-exports.getCCPATimeout = function () {
-  var ccpaTimeout = config[CONSTANTS.CONFIG.COMMON][CONSTANTS.CONFIG.CCPA_TIMEOUT];
+export function getCCPATimeout() {
+  const ccpaTimeout = config[CONSTANTS.CONFIG.COMMON][CONSTANTS.CONFIG.CCPA_TIMEOUT];
   return ccpaTimeout ? window.parseInt(ccpaTimeout) : CONSTANTS.CONFIG.DEFAULT_CCPA_TIMEOUT;
-};
+}
 
-exports.getSchainObject = function () {
+export function getSchainObject() {
   return config[CONSTANTS.CONFIG.COMMON][CONSTANTS.COMMON.SCHAINOBJECT] || {};
-};
+}
 
-exports.isSchainEnabled = function () {
+export function isSchainEnabled() {
   return window.parseInt(config[CONSTANTS.CONFIG.COMMON][CONSTANTS.COMMON.SCHAIN]) || 0;
-};
+}
 
-exports.isFloorPriceModuleEnabled = function() {
+export function isFloorPriceModuleEnabled() {
   return window.parseInt(config[CONSTANTS.CONFIG.COMMON][CONSTANTS.CONFIG.FLOOR_PRICE_MODULE_ENABLED]) === 1;
 }
 
-exports.getFloorSource = function() {
+export function getFloorSource() {
   return config[CONSTANTS.CONFIG.COMMON][CONSTANTS.CONFIG.FLOOR_SOURCE];
 }
 
-exports.getFloorJsonUrl = function() {
+export function getFloorJsonUrl() {
   return config[CONSTANTS.CONFIG.COMMON][CONSTANTS.CONFIG.FLOOR_JSON_URL];
 }
 
 // It will return the auctionDelay specified in conf.js or else default is 100
-exports.getFloorAuctionDelay = function() {
-  var auctionDelay = config[CONSTANTS.CONFIG.COMMON][CONSTANTS.CONFIG.FLOOR_AUCTION_DELAY];
+export function getFloorAuctionDelay() {
+  const auctionDelay = config[CONSTANTS.CONFIG.COMMON][CONSTANTS.CONFIG.FLOOR_AUCTION_DELAY];
   return auctionDelay ? window.parseInt(auctionDelay) : CONSTANTS.CONFIG.DEFAULT_FLOOR_AUCTION_DELAY;
 }
 
 // It will return the floorType specified in conf.js or else default is true
-exports.getFloorType = function() {
+export function getFloorType() {
   return !!(config[CONSTANTS.CONFIG.COMMON][CONSTANTS.CONFIG.FLOOR_ENFORCE_JS] && (config[CONSTANTS.CONFIG.COMMON][CONSTANTS.CONFIG.FLOOR_ENFORCE_JS]).toLowerCase() === CONSTANTS.COMMON.HARD_FLOOR);
 }
 
-exports.isPrebidPubMaticAnalyticsEnabled = function () {
+export function isPrebidPubMaticAnalyticsEnabled() {
   // note: not using window.parseInt as this function is also used in build.sh that runs in NodeJS environment
   return parseInt(config[CONSTANTS.CONFIG.COMMON][CONSTANTS.CONFIG.ENABLE_PB_PM_ANALYTICS]) === 1;
-};
+}
 
-exports.isUsePrebidKeysEnabled = function () {
+export function isUsePrebidKeysEnabled() {
   // note: not using window.parseInt as this function is also used in build.sh that runs in NodeJS environment
   return parseInt(config[CONSTANTS.CONFIG.COMMON][CONSTANTS.CONFIG.USE_PREBID_KEYS]) === 1;
-};
+}
 
-exports.PBJS_NAMESPACE = config[CONSTANTS.CONFIG.COMMON][CONSTANTS.COMMON.PBJS_NAMESPACE] || 'pbjs';
+export const PBJS_NAMESPACE = config[CONSTANTS.CONFIG.COMMON][CONSTANTS.COMMON.PBJS_NAMESPACE] || 'pbjs';
 
 // removeIf(removeAlways)
-exports.isReduceCodeSizeFeatureEnabled = function() {
+export function isReduceCodeSizeFeatureEnabled() {
   // note: not using window.parseInt as this function is also used in build.sh that runs in NodeJS environment
   return parseInt(config[CONSTANTS.CONFIG.COMMON][CONSTANTS.COMMON.REDUCE_CODE_SIZE]) === 1;
-};
+}
+
 // endRemoveIf(removeAlways)
-exports.getPriceGranularity = function() {
+export function getPriceGranularity() {
   return config[CONSTANTS.CONFIG.COMMON][CONSTANTS.COMMON.PRICE_GRANULARITY] || null;
-};
+}
 
-exports.getGranularityMultiplier = function() {
+export function getGranularityMultiplier() {
   return parseFloat(config[CONSTANTS.CONFIG.COMMON][CONSTANTS.COMMON.GRANULARITY_MULTIPLIER]) || 1;
-};
-exports.isAbTestEnabled = function () {
+}
+
+export function isAbTestEnabled() {
   return parseInt(config[CONSTANTS.CONFIG.COMMON][CONSTANTS.CONFIG.AB_TEST_ENABLED]) === 1;
-};
+}
 
-exports.getTestPWTConfig = function () {
+export function getTestPWTConfig() {
   return config[CONSTANTS.COMMON.TEST_PWT] || {};
-};
+}
 
-exports.getTestGroupDetails = function () {
+export function getTestGroupDetails() {
   return config[CONSTANTS.COMMON.TEST_GROUP_DETAILS] || {};
-};
+}
 
-exports.getTestPartnerConfig = function () {
+export function getTestPartnerConfig() {
   return config[CONSTANTS.COMMON.TEST_PARTNER] || {};
-};
+}
 
-exports.getTestIdentityPartners = function () {
+export function getTestIdentityPartners() {
   return config[CONSTANTS.COMMON.TEST_IDENTITY_PARTNER] || {};
-};
+}
 
-exports.updateABTestConfig = function () {
-  if (refThis.isAbTestEnabled()) {
-    var randomNumberBelow100 = util.getRandomNumberBelow100();
-    var testGroupDetails = refThis.getTestGroupDetails();
+export function updateABTestConfig() {
+  if (isAbTestEnabled()) {
+    const randomNumberBelow100 = util.getRandomNumberBelow100();
+    const testGroupDetails = getTestGroupDetails();
     // if Random number is smaller than the test group size then test config will be applied
     if (testGroupDetails && testGroupDetails.testGroupSize && randomNumberBelow100 < testGroupDetails.testGroupSize) {
-      refThis.updatePWTConfig();
-      config.adapters = refThis.updatePartnerConfig(refThis.getTestPartnerConfig(), config.adapters);
-      if (refThis.getTestIdentityPartners() && refThis.getIdentityPartners()) {
-        if (Object.keys(refThis.getTestIdentityPartners()).length > 0 && Object.keys(refThis.getIdentityPartners()).length == 0) {
-          util.log(CONSTANTS.MESSAGES.M31, JSON.stringify(refThis.getTestIdentityPartners()));
-          config.identityPartners = refThis.getTestIdentityPartners();
-        } else if (Object.keys(refThis.getTestIdentityPartners()).length == 0 && Object.keys(refThis.getIdentityPartners()).length > 0) {
+      updatePWTConfig();
+      config.adapters = updatePartnerConfig(getTestPartnerConfig(), config.adapters);
+      if (getTestIdentityPartners() && getIdentityPartners()) {
+        if (Object.keys(getTestIdentityPartners()).length > 0 && Object.keys(getIdentityPartners()).length == 0) {
+          util.log(CONSTANTS.MESSAGES.M31, JSON.stringify(getTestIdentityPartners()));
+          config.identityPartners = getTestIdentityPartners();
+        } else if (Object.keys(getTestIdentityPartners()).length == 0 && Object.keys(getIdentityPartners()).length > 0) {
           util.log(CONSTANTS.MESSAGES.M31, JSON.stringify({}));
           config.identityPartners = {};
         } else {
-          config.identityPartners = refThis.updatePartnerConfig(refThis.getTestIdentityPartners(), refThis.getIdentityPartners());
+          config.identityPartners = updatePartnerConfig(getTestIdentityPartners(), getIdentityPartners());
         }
       }
       window.PWT.testGroupId = 1;
     }
   }
-};
+}
 
-exports.updatePWTConfig = function () {
-  var testConfig = refThis.getTestPWTConfig();
+export function updatePWTConfig() {
+  const testConfig = getTestPWTConfig();
   if (testConfig && Object.keys(testConfig).length > 0) {
     util.log(CONSTANTS.MESSAGES.M30, JSON.stringify(testConfig));
-    for (var key in testConfig) {
+    for (const key in testConfig) {
       if (config[CONSTANTS.CONFIG.COMMON][key]) {
         config[CONSTANTS.CONFIG.COMMON][key] = testConfig[key];
       }
@@ -354,17 +361,17 @@ exports.updatePWTConfig = function () {
     // TODO: Uncomment Below code after updating phatomjs or using chrome headless
     // Object.assign(config[CONSTANTS.CONFIG.COMMON], testConfig);
   }
-};
+}
 
-exports.updatePartnerConfig = function (testConfig, controlConfig) {
+export function updatePartnerConfig(testConfig, controlConfig) {
   if (testConfig && controlConfig && Object.keys(testConfig).length > 0 && Object.keys(controlConfig).length > 0) {
     util.log(CONSTANTS.MESSAGES.M31, JSON.stringify(testConfig));
-    for (var key in testConfig) {
+    for (const key in testConfig) {
       if (util.isOwnProperty(testConfig, key) && util.isObject(testConfig[key])) {
         if (Object.keys(testConfig[key]).length == 0 && controlConfig[key] && Object.keys(controlConfig[key]).length > 0) {
           testConfig[key] = controlConfig[key];
         } else if (Object.keys(testConfig[key]).length > 0 && controlConfig[key] && Object.keys(controlConfig[key]).length > 0) {
-          testConfig[key] = refThis.getMergedConfig(testConfig[key], controlConfig[key]);
+          testConfig[key] = getMergedConfig(testConfig[key], controlConfig[key]);
         }
       }
     }
@@ -374,14 +381,11 @@ exports.updatePartnerConfig = function (testConfig, controlConfig) {
     // since only one test type can be enabled other type of test config will be empty if other test config is enabled and hence return control config
     return controlConfig;
   }
-};
+}
 
-exports.getTestGroupDetails = function () {
-  return config[CONSTANTS.COMMON.TEST_GROUP_DETAILS] || {};
-};
 // This will keep toObject config as is and only merge objects common in both from and toobject
-exports.getMergedConfig = function(toObject, fromObject) {
-  for (var key in fromObject) {
+export function getMergedConfig(toObject, fromObject) {
+  for (const key in fromObject) {
     if (!Object.prototype.hasOwnProperty.call(toObject, key)) {
       if (util.isObject(fromObject[key]) || util.isArray(fromObject[key])) {
         toObject[key] = JSON.parse(JSON.stringify(fromObject[key]));
@@ -391,25 +395,25 @@ exports.getMergedConfig = function(toObject, fromObject) {
     }
   }
   return toObject;
-};
+}
 
-exports.forEachBidderAlias = function (callback) {
+export function forEachBidderAlias(callback) {
   util.forEachOnObject(config.alias, callback);
-};
+}
 
-exports.getAdapterNameForAlias = function(aliasName) {
+export function getAdapterNameForAlias(aliasName) {
   if (config.alias && config.alias[aliasName]) {
     return config.alias[aliasName];
   }
   return aliasName;
-};
+}
 
-exports.isSSOEnabled = function() {
+export function isSSOEnabled() {
   return parseInt(config[CONSTANTS.CONFIG.COMMON][CONSTANTS.CONFIG.SSO_ENABLED]) === 1;
 }
 
-exports.getServerEnabledAdaptars = function() {
-  var s2sBidders = Object.keys(config.adapters).filter(function(adapter) {
+export function getServerEnabledAdaptars() {
+  const s2sBidders = Object.keys(config.adapters).filter(adapter => {
     if (config.adapters[adapter]['serverSideEnabled'] == '1') {
       return adapter;
     }
@@ -417,10 +421,10 @@ exports.getServerEnabledAdaptars = function() {
   return s2sBidders;
 }
 
-exports.getTimeoutForPBSRequest = function() {
-  var ssTimeOut = parseInt(config.pwt.ssTimeout);
-  var maxTimeout = CONSTANTS.TIMEOUT_CONFIG.MaxTimeout;
-  var minTimeout = CONSTANTS.TIMEOUT_CONFIG.MinTimeout;
+export function getTimeoutForPBSRequest() {
+  const ssTimeOut = parseInt(config.pwt.ssTimeout);
+  const maxTimeout = CONSTANTS.TIMEOUT_CONFIG.MaxTimeout;
+  const minTimeout = CONSTANTS.TIMEOUT_CONFIG.MinTimeout;
   if (ssTimeOut >= minTimeout && ssTimeOut <= maxTimeout) {
     return ssTimeOut;
   } else if (ssTimeOut >= minTimeout) {
@@ -429,8 +433,8 @@ exports.getTimeoutForPBSRequest = function() {
   return minTimeout;
 }
 
-exports.getPubMaticAndAlias = function(s2sBidders) {
-  var pubMaticaliases = s2sBidders.filter(function(adapter) {
+export function getPubMaticAndAlias(s2sBidders) {
+  const pubMaticaliases = s2sBidders.filter(adapter => {
     if (config.alias && config.alias[adapter] && config.alias[adapter].includes('pubmatic') || adapter.includes('pubmatic')) {
       return adapter;
     }
@@ -438,21 +442,21 @@ exports.getPubMaticAndAlias = function(s2sBidders) {
   return pubMaticaliases;
 }
 
-exports.usePBSAdapter = function() {
+export function usePBSAdapter() {
   if (config.pwt.usePBSAdapter == '1') {
     return true;
   }
   return false;
 }
 
-exports.createMacros = function() {
+export function createMacros() {
   return {
     '[PLATFORM]': util.getDevicePlatform().toString(),
-    '[PROFILE_ID]': refThis.getProfileID().toString(),
-    '[PROFILE_VERSION]': refThis.getProfileDisplayVersionID().toString()
+    '[PROFILE_ID]': getProfileID().toString(),
+    '[PROFILE_VERSION]': getProfileDisplayVersionID().toString()
   }
 }
 
-exports.getMarketplaceBidders = function() {
+export function getMarketplaceBidders() {
   return config.pwt.marketplaceBidders ? config.pwt.marketplaceBidders.split(',') : false;
 }

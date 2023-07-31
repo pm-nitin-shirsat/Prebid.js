@@ -1,16 +1,16 @@
-var localStorageKey = 'OpenWrap';
-var DUMMY_PUB_ID = 909090;
+const localStorageKey = 'OpenWrap';
+const DUMMY_PUB_ID = 909090;
 
 // Adding util here creating cyclic dependecies between the modules so avoided it & added two util function manually
 function isA(object, testForType) {
-  return toString.call(object) === '[object ' + testForType + ']';
+  return toString.call(object) === `[object ${testForType}]`;
 }
 
-var isFunction = function (object) {
+const isFunction = object => {
   return isA(object, 'Function');
 };
 
-var isLocalStoreEnabled = (function () {
+const isLocalStoreEnabled = (() => {
   try {
     return window.localStorage && isFunction(window.localStorage.getItem) && isFunction(window.localStorage.setItem);
   } catch (e) {
@@ -28,8 +28,8 @@ var isLocalStoreEnabled = (function () {
 	}
 */
 
-var setConsentDataInLS = function (pubId, dataType, data, gdprApplies) {
-  var pm;
+const setConsentDataInLS = (pubId, dataType, data, gdprApplies) => {
+  let pm;
 
   if (!isLocalStoreEnabled) {
     return;
@@ -62,12 +62,13 @@ var setConsentDataInLS = function (pubId, dataType, data, gdprApplies) {
 };
 
 /* start-test-block */
-exports.setConsentDataInLS = setConsentDataInLS;
+export {setConsentDataInLS};
+
 /* end-test-block */
 
-exports.isCmpFound = function () {
+export function isCmpFound() {
   return !!window.__cmp;
-};
+}
 
 /**
 	* getUserConsentDataFromCMP() method return nothing
@@ -75,20 +76,20 @@ exports.isCmpFound = function () {
 	* Once, We get that we will this data in Local Storage againg a dummy ID
 	* If CMP is not detected in current document we try to look into upper iframe & fetch the infoa
 	*/
-exports.getUserConsentDataFromCMP = function () {
+export function getUserConsentDataFromCMP() {
   // Adding dummy pubId to store data against
-  var pubId = DUMMY_PUB_ID; // CONFIG.getPublisherId();
-  var callId = 0;
-  var getConsentDataReq = {
+  const pubId = DUMMY_PUB_ID; // CONFIG.getPublisherId();
+  let callId = 0;
+  const getConsentDataReq = {
     __cmp: {
-      callId: 'iframe:' + (++callId),
+      callId: `iframe:${++callId}`,
       command: 'getConsentData'
     }
   };
 
   function receiveMessage(event) {
     if (event && event.data && event.data.__cmp && event.data.__cmp.result) {
-      var result = event.data.__cmp.result;
+      const result = event.data.__cmp.result;
 
       if (result && result.consentData) {
         /**
@@ -107,7 +108,7 @@ exports.getUserConsentDataFromCMP = function () {
   }
 
   function callCMP() {
-    window.__cmp('getConsentData', 'vendorConsents', function (result) {
+    window.__cmp('getConsentData', 'vendorConsents', result => {
       if (result && result.consentData) {
         setConsentDataInLS(pubId, 'c', result.consentData, result.gdprApplies);
       } else if (typeof result === 'string') {
@@ -120,7 +121,7 @@ exports.getUserConsentDataFromCMP = function () {
     if (typeof window.__cmp === 'function') {
       callCMP();
     } else {
-      setTimeout(function () {
+      setTimeout(() => {
         if (typeof window.__cmp === 'function') {
           callCMP();
         }
@@ -131,7 +132,7 @@ exports.getUserConsentDataFromCMP = function () {
     window.top.postMessage(getConsentDataReq, '*');
     window.addEventListener('message', receiveMessage);
   }
-};
+}
 
 /**
 	* getUserConsentDataFromLS() method return the object { c: "XXX", g: 0/1 }
@@ -140,15 +141,15 @@ exports.getUserConsentDataFromCMP = function () {
 	* @return {object} { c: String, g: Number 0/1 }
 	*/
 
-exports.getUserConsentDataFromLS = function () {
+export function getUserConsentDataFromLS() {
   // Adding dummy pubId to store data against
-  var pubId = DUMMY_PUB_ID;
-  var data = {c: '', g: 0};
+  const pubId = DUMMY_PUB_ID;
+  const data = {c: '', g: 0};
 
   if (!isLocalStoreEnabled) {
     return data;
   }
-  var pm;
+  let pm;
 
   try {
     pm = window.localStorage.getItem(localStorageKey);
@@ -160,7 +161,7 @@ exports.getUserConsentDataFromLS = function () {
       pm = {};
     }
     if (pm.hasOwnProperty(pubId)) {
-      var pmRecord = pm[pubId];
+      const pmRecord = pm[pubId];
 
       if (pmRecord && pmRecord.c && pmRecord.t) {
         // check timestamp of data and current; if older than a day do not use it
@@ -172,4 +173,4 @@ exports.getUserConsentDataFromLS = function () {
     }
   }
   return data;
-};
+}

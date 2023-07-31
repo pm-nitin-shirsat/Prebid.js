@@ -56,7 +56,7 @@
 // window.PWT.sfDisplayCreative = function(theDocument, bidID) {
 //   util.log('In sfDisplayCreative for: ' + bidID);
 //   ucTag = window.ucTag || {};
-//   this.isSafeFrame = true;
+//   isSafeFrame = true;
 //   ucTag = window.ucTag || {};
 //   if (isPrebidPubMaticAnalyticsEnabled) {
 //     ucTag.renderAd(theDocument, {adId: bidID, pubUrl: document.referrer});
@@ -74,7 +74,7 @@
 
 // window.PWT.sfDisplayPMPCreative = function(theDocument, values, priorityArray) {
 //   util.log('In sfDisplayPMPCreative for: ' + values);
-//   this.isSafeFrame = true;
+//   isSafeFrame = true;
 //   var bidID = util.getBididForPMP(values, priorityArray);
 //   if (bidID) {
 //     if (CONFIG.isPrebidPubMaticAnalyticsEnabled()) {

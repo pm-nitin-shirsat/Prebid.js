@@ -1,4 +1,4 @@
-exports.pwt = {
+export const pwt = {
   t: '3000',
   pid: '46',
   gcv: '11',
@@ -32,14 +32,16 @@ exports.pwt = {
 // singleImpression is used to enable feature of sending single impression for multiple size ad slot earlier there were multiple impression for multiple sizes
 
 // below is the config for test purpose only
-exports.testConfigDetails = {
+export const testConfigDetails = {
   'testGroupSize': 99
 };
+
 // below is the config for test purpose only
-exports.test_pwt = {
+export const test_pwt = {
   't': 5000
 };
-exports.adapters = {
+
+export const adapters = {
   pubmatic: {
     rev_share: '0.0',
     throttle: '100',
@@ -127,7 +129,7 @@ exports.adapters = {
   }
 };
 
-exports.identityPartners = {
+export const identityPartners = {
   pubCommonId: {
     name: 'pubCommonId',
     'storage.type': 'cookie',
@@ -169,7 +171,7 @@ exports.identityPartners = {
 // 5. DIV1 -> Apply based on condtions (enabled,)
 // 6. DIV5 -> It will increase Latency
 
-exports.slotConfig = {
+export const slotConfig = {
   'configPattern': '_DIV_',
   'config': {
     'Div1': {

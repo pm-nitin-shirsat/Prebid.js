@@ -4,9 +4,8 @@ import * as  util from './util.js';
 // import * as  GDPR from "./gdpr.js");
 import * as  bmEntry from './bmEntry.js';
 
-var refThis = this;
-var storedObject;
-var frequencyDepth;
+let storedObject;
+let frequencyDepth;
 const PREFIX = 'PROFILE_AUCTION_INFO_';
 
 const TRACKER_METHODS = {
@@ -31,50 +30,50 @@ function createBidEntry(divID) { // TDD, i/o : done
 }
 
 /* start-test-block */
-exports.createBidEntry = createBidEntry;
+export {createBidEntry};
+
 /* end-test-block */
 
-exports.setSizes = function(divID, slotSizes) { // TDD, i/o : done
-  refThis.createBidEntry(divID);
+export function setSizes(divID, slotSizes) { // TDD, i/o : done
+  createBidEntry(divID);
   window.PWT.bidMap[divID].setSizes(slotSizes);
-};
+}
 
-exports.setCallInitTime = function(divID, adapterID) { // TDD, i/o : done
-  refThis.createBidEntry(divID);
+export function setCallInitTime(divID, adapterID) { // TDD, i/o : done
+  createBidEntry(divID);
   window.PWT.bidMap[divID].setAdapterEntry(adapterID);
-};
+}
 
-exports.setAllPossibleBidsReceived = function(divID) {
+export function setAllPossibleBidsReceived(divID) {
   window.PWT.bidMap[divID].setAllPossibleBidsReceived();
-};
+}
 
-exports.setBidFromBidder = function(divID, bidDetails) { // TDD done
-  var bidderID = bidDetails.getAdapterID();
-  var bidID = bidDetails.getBidID();
-  var bidMapEntry = window.PWT.bidMap[divID];
+export function setBidFromBidder(divID, bidDetails) { // TDD done
+  const bidderID = bidDetails.getAdapterID();
+  const bidID = bidDetails.getBidID();
+  const bidMapEntry = window.PWT.bidMap[divID];
   /* istanbul ignore else */
   if (!util.isOwnProperty(window.PWT.bidMap, divID)) {
-    util.logWarning('BidManager is not expecting bid for ' + divID + ', from ' + bidderID);
+    util.logWarning(`BidManager is not expecting bid for ${divID}, from ${bidderID}`);
     return;
   }
 
-  var isPostTimeout = (bidMapEntry.getCreationTime() + CONFIG.getTimeout()) < bidDetails.getReceivedTime();
-  var latency = bidDetails.getReceivedTime() - bidMapEntry.getCreationTime();
+  const isPostTimeout = (bidMapEntry.getCreationTime() + CONFIG.getTimeout()) < bidDetails.getReceivedTime();
+  const latency = bidDetails.getReceivedTime() - bidMapEntry.getCreationTime();
 
-  refThis.createBidEntry(divID);
+  createBidEntry(divID);
 
-  util.log('BdManagerSetBid: divID: ' + divID + ', bidderID: ' + bidderID + ', ecpm: ' + bidDetails.getGrossEcpm() + ', size: ' + bidDetails.getWidth() + 'x' + bidDetails.getHeight() + ', postTimeout: ' + isPostTimeout + ', defaultBid: ' + bidDetails.getDefaultBidStatus());
+  util.log(`BdManagerSetBid: divID: ${divID}, bidderID: ${bidderID}, ecpm: ${bidDetails.getGrossEcpm()}, size: ${bidDetails.getWidth()}x${bidDetails.getHeight()}, postTimeout: ${isPostTimeout}, defaultBid: ${bidDetails.getDefaultBidStatus()}`);
   /* istanbul ignore else */
   if (isPostTimeout === true /* && !bidDetails.isServerSide */) {
     bidDetails.setPostTimeoutStatus();
   }
 
-  var lastBidID = bidMapEntry.getLastBidIDForAdapter(bidderID);
+  const lastBidID = bidMapEntry.getLastBidIDForAdapter(bidderID);
   if (lastBidID != '') {
-    var lastBid = bidMapEntry.getBid(bidderID, lastBidID); // todo: what if the lastBid is null
-    var lastBidWasDefaultBid = lastBid.getDefaultBidStatus() === 1;
-    var lastBidWasErrorBid = lastBid.getDefaultBidStatus() === -1
-			;
+    const lastBid = bidMapEntry.getBid(bidderID, lastBidID); // todo: what if the lastBid is null
+    const lastBidWasDefaultBid = lastBid.getDefaultBidStatus() === 1;
+    const lastBidWasErrorBid = lastBid.getDefaultBidStatus() === -1;
 
     if (lastBidWasDefaultBid || !isPostTimeout || lastBidWasErrorBid) {
       /* istanbul ignore else */
@@ -84,7 +83,7 @@ exports.setBidFromBidder = function(divID, bidDetails) { // TDD done
 
       if (lastBidWasDefaultBid || lastBid.getNetEcpm() < bidDetails.getNetEcpm() || lastBidWasErrorBid) {
         util.log(CONSTANTS.MESSAGES.M12 + lastBid.getNetEcpm() + CONSTANTS.MESSAGES.M13 + bidDetails.getNetEcpm() + CONSTANTS.MESSAGES.M14 + bidderID);
-        refThis.storeBidInBidMap(divID, bidderID, bidDetails, latency);
+        storeBidInBidMap(divID, bidderID, bidDetails, latency);
       } else {
         util.log(CONSTANTS.MESSAGES.M12 + lastBid.getNetEcpm() + CONSTANTS.MESSAGES.M15 + bidDetails.getNetEcpm() + CONSTANTS.MESSAGES.M16 + bidderID);
       }
@@ -93,13 +92,13 @@ exports.setBidFromBidder = function(divID, bidDetails) { // TDD done
     }
   } else {
     util.log(CONSTANTS.MESSAGES.M18 + bidderID);
-    refThis.storeBidInBidMap(divID, bidderID, bidDetails, latency);
+    storeBidInBidMap(divID, bidderID, bidDetails, latency);
   }
   if (isPostTimeout) {
     // explicitly trigger user syncs since its a post timeout bid
     setTimeout(window[CONSTANTS.COMMON.PREBID_NAMESPACE].triggerUserSyncs, 10);
   }
-};
+}
 
 function storeBidInBidMap(slotID, adapterID, theBid, latency) { // TDD, i/o : done
   // Adding a hook for publishers to modify the bid we have to store
@@ -121,7 +120,7 @@ function storeBidInBidMap(slotID, adapterID, theBid, latency) { // TDD, i/o : do
       type: 'bid',
       bidder: adapterID + (CONFIG.getBidPassThroughStatus(adapterID) !== 0 ? '(Passthrough)' : ''),
       bidDetails: theBid,
-      latency: latency,
+      latency,
       s2s: CONFIG.isServerSideAdapter(adapterID),
       adServerCurrency: util.getCurrencyToDisplay()
     });
@@ -129,33 +128,35 @@ function storeBidInBidMap(slotID, adapterID, theBid, latency) { // TDD, i/o : do
 }
 
 /* start-test-block */
-exports.storeBidInBidMap = storeBidInBidMap;
+export {storeBidInBidMap};
+
 /* end-test-block */
 
 function resetBid(divID, impressionID) { // TDD, i/o : done
   util.vLogInfo(divID, {type: 'hr'});
   delete window.PWT.bidMap[divID];
-  refThis.createBidEntry(divID);
+  createBidEntry(divID);
   window.PWT.bidMap[divID].setImpressionID(impressionID);
 }
 
 /* start-test-block */
-exports.resetBid = resetBid;
+export {resetBid};
+
 /* end-test-block */
 
 // removeIf(removeLegacyAnalyticsRelatedCode)
-function createMetaDataKey(pattern, bmEntry, keyValuePairs) {
-  var output = '';
-  var validBidCount = 0;
-  var partnerCount = 0;
-  var macros = CONSTANTS.METADATA_MACROS;
-  var macroRegexFlag = 'g';
+function createMetaDataKey(pattern, {adapters}, keyValuePairs) {
+  let output = '';
+  let validBidCount = 0;
+  let partnerCount = 0;
+  const macros = CONSTANTS.METADATA_MACROS;
+  const macroRegexFlag = 'g';
 
-  util.forEachOnObject(bmEntry.adapters, function(adapterID, adapterEntry) {
+  util.forEachOnObject(adapters, (adapterID, adapterEntry) => {
     if (adapterEntry.getLastBidID() != '') {
       // If pubmaticServerBidAdapter then don't increase partnerCount
       (adapterID !== 'pubmaticServer') && partnerCount++;
-      util.forEachOnObject(adapterEntry.bids, function(bidID, theBid) {
+      util.forEachOnObject(adapterEntry.bids, (bidID, theBid) => {
         // Description-> adapterID == "pubmatic" && theBid.netEcpm == 0 this check is put because from pubmaticBidAdapter in prebid we are
         // passing zero bid when there are no bid under timout for latency reports and this caused issue to have zero bids in pwtm key
         // so put this check which will not log zero bids for pubmatic. Note : From prebid 1.x onwards we do not get zero bids in case of no bids.
@@ -175,19 +176,20 @@ function createMetaDataKey(pattern, bmEntry, keyValuePairs) {
   output = output.replace(new RegExp(macros.PARTNER_COUNT, macroRegexFlag), partnerCount);
   keyValuePairs[CONSTANTS.WRAPPER_TARGETING_KEYS.META_DATA] = encodeURIComponent(output);
 }
+
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
 // removeIf(removeLegacyAnalyticsRelatedCode)
 /* start-test-block */
-exports.createMetaDataKey = createMetaDataKey;
+export {createMetaDataKey};
+
 /* end-test-block */
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
 // removeIf(removeLegacyAnalyticsRelatedCode)
 function replaceMetaDataMacros(pattern, theBid) {
-  var macros = CONSTANTS.METADATA_MACROS;
-  var macroRegexFlag = 'g'
-	;
+  const macros = CONSTANTS.METADATA_MACROS;
+  const macroRegexFlag = 'g';
   return pattern
     .replace(new RegExp(macros.PARTNER, macroRegexFlag), theBid.getAdapterID())
     .replace(new RegExp(macros.WIDTH, macroRegexFlag), theBid.getWidth())
@@ -195,21 +197,23 @@ function replaceMetaDataMacros(pattern, theBid) {
     .replace(new RegExp(macros.GROSS_ECPM, macroRegexFlag), theBid.getGrossEcpm())
     .replace(new RegExp(macros.NET_ECPM, macroRegexFlag), theBid.getNetEcpm());
 }
+
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
 // removeIf(removeLegacyAnalyticsRelatedCode)
 /* start-test-block */
-exports.replaceMetaDataMacros = replaceMetaDataMacros;
+export {replaceMetaDataMacros};
+
 /* end-test-block */
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
 // removeIf(removeLegacyAnalyticsRelatedCode)
 function auctionBids(bmEntry) { // TDD, i/o : done
-  var winningBid = null;
-  var keyValuePairs = {};
+  let winningBid = null;
+  let keyValuePairs = {};
 
-  util.forEachOnObject(bmEntry.adapters, function(adapterID, adapterEntry) {
-    var obj = refThis.auctionBidsCallBack(adapterID, adapterEntry, keyValuePairs, winningBid);
+  util.forEachOnObject(bmEntry.adapters, (adapterID, adapterEntry) => {
+    const obj = auctionBidsCallBack(adapterID, adapterEntry, keyValuePairs, winningBid);
     winningBid = obj.winningBid;
     keyValuePairs = obj.keyValuePairs;
   });
@@ -225,39 +229,42 @@ function auctionBids(bmEntry) { // TDD, i/o : done
     kvp: keyValuePairs
   };
 }
+
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
 // removeIf(removeLegacyAnalyticsRelatedCode)
 /* start-test-block */
-exports.auctionBids = auctionBids;
+export {auctionBids};
+
 /* end-test-block */
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
 // removeIf(removeNativeRelatedCode)
 function updateNativeTargtingKeys(keyValuePairs) {
-  for (var key in keyValuePairs) {
-    if (key.indexOf('native') >= 0 && key.split('_').length === 3) {
+  for (const key in keyValuePairs) {
+    if (key.includes('native') && key.split('_').length === 3) {
       delete keyValuePairs[key];
     }
   }
 }
+
 // endRemoveIf(removeNativeRelatedCode)
 
 // removeIf(removeNativeRelatedCode)
 /* start-test-block */
-exports.updateNativeTargtingKeys = updateNativeTargtingKeys;
+export {updateNativeTargtingKeys};
+
 /* end-test-block */
 // endRemoveIf(removeNativeRelatedCode)
 
 // removeIf(removeLegacyAnalyticsRelatedCode)
 function auctionBidsCallBack(adapterID, adapterEntry, keyValuePairs, winningBid) { // TDD, i/o : done
-  var refThis = this;
   if (adapterEntry.getLastBidID() != '') {
-    util.forEachOnObject(adapterEntry.bids, function(bidID, theBid) {
+    util.forEachOnObject(adapterEntry.bids, (bidID, theBid) => {
       // do not consider post-timeout bids
       /* istanbul ignore else */
       if (theBid.getPostTimeoutStatus() === true) {
-        return { winningBid: winningBid, keyValuePairs: keyValuePairs };
+        return { winningBid, keyValuePairs };
       }
 
       /* istanbul ignore else */
@@ -269,13 +276,13 @@ function auctionBidsCallBack(adapterID, adapterEntry, keyValuePairs, winningBid)
         if (winningBid.getNetEcpm() < theBid.getNetEcpm()) {
           // i.e. the current bid is the winning bid, so remove the native keys from keyValuePairs
           // removeIf(removeNativeRelatedCode)
-          refThis.updateNativeTargtingKeys(keyValuePairs);
+          updateNativeTargtingKeys(keyValuePairs);
           // endRemoveIf(removeNativeRelatedCode)
         } else {
           // i.e. the current bid is not the winning bid, so remove the native keys from theBid.keyValuePairs
-          var bidKeyValuePairs = theBid.getKeyValuePairs();
+          const bidKeyValuePairs = theBid.getKeyValuePairs();
           // removeIf(removeNativeRelatedCode)
-          refThis.updateNativeTargtingKeys(bidKeyValuePairs);
+          updateNativeTargtingKeys(bidKeyValuePairs);
           // endRemoveIf(removeNativeRelatedCode)
           theBid.keyValuePairs = bidKeyValuePairs;
         }
@@ -284,7 +291,7 @@ function auctionBidsCallBack(adapterID, adapterEntry, keyValuePairs, winningBid)
 
       /* istanbul ignore else */
       if (CONFIG.getBidPassThroughStatus(adapterID) !== 0) {
-        return { winningBid: winningBid, keyValuePairs: keyValuePairs };
+        return { winningBid, keyValuePairs };
       }
 
       if (winningBid == null) {
@@ -293,26 +300,28 @@ function auctionBidsCallBack(adapterID, adapterEntry, keyValuePairs, winningBid)
         winningBid = theBid;
       }
     });
-    return { winningBid: winningBid, keyValuePairs: keyValuePairs };
+    return { winningBid, keyValuePairs };
   } else {
-    	return { winningBid: winningBid, keyValuePairs: keyValuePairs };
+    	return { winningBid, keyValuePairs };
   }
 }
+
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
 // removeIf(removeLegacyAnalyticsRelatedCode)
 /* start-test-block */
-exports.auctionBidsCallBack = auctionBidsCallBack;
+export {auctionBidsCallBack};
+
 /* end-test-block */
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
 // removeIf(removeLegacyAnalyticsRelatedCode)
-exports.getBid = function(divID) { // TDD, i/o : done
-  var winningBid = null;
-  var keyValuePairs = null;
+export function getBid(divID) { // TDD, i/o : done
+  let winningBid = null;
+  let keyValuePairs = null;
   /* istanbul ignore else */
   if (util.isOwnProperty(window.PWT.bidMap, divID)) {
-    var data = refThis.auctionBids(window.PWT.bidMap[divID]);
+    const data = auctionBids(window.PWT.bidMap[divID]);
     winningBid = data.wb;
     keyValuePairs = data.kvp;
 
@@ -334,24 +343,25 @@ exports.getBid = function(divID) { // TDD, i/o : done
   }
 
   return {wb: winningBid, kvp: keyValuePairs};
-};
+}
+
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
 // removeIf(removeLegacyAnalyticsRelatedCode)
-exports.getBidById = function(bidID) { // TDD, i/o : done
+export function getBidById(bidID) { // TDD, i/o : done
   /* istanbul ignore else */
   if (!util.isOwnProperty(window.PWT.bidIdMap, bidID)) {
     util.log(CONSTANTS.MESSAGES.M25 + bidID);
     return null;
   }
 
-  var divID = window.PWT.bidIdMap[bidID].s;
-  var adapterID = window.PWT.bidIdMap[bidID].a;
+  const divID = window.PWT.bidIdMap[bidID].s;
+  const adapterID = window.PWT.bidIdMap[bidID].a;
 
   /* istanbul ignore else */
   if (util.isOwnProperty(window.PWT.bidMap, divID)) {
-    util.log('BidID: ' + bidID + ', DivID: ' + divID + CONSTANTS.MESSAGES.M19 + adapterID);
-    var theBid = window.PWT.bidMap[divID].getBid(adapterID, bidID);
+    util.log(`BidID: ${bidID}, DivID: ${divID}${CONSTANTS.MESSAGES.M19}${adapterID}`);
+    const theBid = window.PWT.bidMap[divID].getBid(adapterID, bidID);
     /* istanbul ignore else */
     if (theBid == null) {
       return null;
@@ -365,61 +375,62 @@ exports.getBidById = function(bidID) { // TDD, i/o : done
 
   util.log(CONSTANTS.MESSAGES.M25 + bidID);
   return null;
-};
+}
+
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
 // removeIf(removeLegacyAnalyticsRelatedCode)
-exports.displayCreative = function(theDocument, bidID) { // TDD, i/o : done
+export function displayCreative(theDocument, bidID) { // TDD, i/o : done
   storedObject = localStorage.getItem(PREFIX + window.location.hostname);
-  var bidDetails = refThis.getBidById(bidID);
+  const bidDetails = getBidById(bidID);
   /* istanbul ignore else */
   if (bidDetails) {
-    var theBid = bidDetails.bid;
-    var divID = bidDetails.slotid
-		;
+    const theBid = bidDetails.bid;
+    const divID = bidDetails.slotid;
     util.displayCreative(theDocument, theBid);
     util.vLogInfo(divID, {type: 'disp', adapter: theBid.getAdapterID()});
-    refThis.executeMonetizationPixel(divID, theBid);
+    executeMonetizationPixel(divID, theBid);
     // Check if browsers local storage has auction related data and update impression served count accordingly.
-	    var frequencyDepth = JSON.parse(localStorage.getItem(PREFIX + window.location.hostname)) || {};
+	    const frequencyDepth = JSON.parse(localStorage.getItem(PREFIX + window.location.hostname)) || {};
     if (frequencyDepth !== null && frequencyDepth.slotLevelFrquencyDepth) {
       frequencyDepth.slotLevelFrquencyDepth[frequencyDepth.codeAdUnitMap[divID]].impressionServed = frequencyDepth.slotLevelFrquencyDepth[frequencyDepth.codeAdUnitMap[divID]].impressionServed + 1;
       frequencyDepth.impressionServed = frequencyDepth.impressionServed + 1;
     }
     localStorage.setItem(PREFIX + window.location.hostname, JSON.stringify(frequencyDepth));
   }
-};
+}
+
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
 // removeIf(removeLegacyAnalyticsRelatedCode)
-exports.executeAnalyticsPixel = function() { // TDD, i/o : done
+export function executeAnalyticsPixel() { // TDD, i/o : done
   storedObject = localStorage.getItem(PREFIX + window.location.hostname);
   frequencyDepth = storedObject !== null ? JSON.parse(storedObject) : {};
-  var outputObj = {
+  const outputObj = {
     s: []
   };
-  var pubId = CONFIG.getPublisherId();
+  const pubId = CONFIG.getPublisherId();
   // gdprData = GDPR.getUserConsentDataFromLS(),
   // consentString = "",
-  var pixelURL = CONFIG.getAnalyticsPixelURL();
-  var impressionIDMap = {} // impID => slots[]
-		;
+  let pixelURL = CONFIG.getAnalyticsPixelURL();
+  const // impID => slots[]
+  impressionIDMap = {};
   /* istanbul ignore else */
   if (!pixelURL) {
     return;
   }
 
-  pixelURL = CONSTANTS.COMMON.PROTOCOL + pixelURL + 'pubid=' + pubId;
+  pixelURL = `${CONSTANTS.COMMON.PROTOCOL + pixelURL}pubid=${pubId}`;
 
   outputObj[CONSTANTS.CONFIG.PUBLISHER_ID] = CONFIG.getPublisherId();
-  outputObj[CONSTANTS.LOGGER_PIXEL_PARAMS.TIMEOUT] = '' + CONFIG.getTimeout();
+  outputObj[CONSTANTS.LOGGER_PIXEL_PARAMS.TIMEOUT] = `${CONFIG.getTimeout()}`;
   outputObj[CONSTANTS.LOGGER_PIXEL_PARAMS.PAGE_URL] = window.decodeURIComponent(util.metaInfo.pageURL);
   outputObj[CONSTANTS.LOGGER_PIXEL_PARAMS.PAGE_DOMAIN] = util.metaInfo.pageDomain;
   outputObj[CONSTANTS.LOGGER_PIXEL_PARAMS.TIMESTAMP] = util.getCurrentTimestamp();
   outputObj[CONSTANTS.CONFIG.PROFILE_ID] = CONFIG.getProfileID();
   outputObj[CONSTANTS.CONFIG.PROFILE_VERSION_ID] = CONFIG.getProfileDisplayVersionID();
   outputObj['ih'] = CONFIG.isUserIdModuleEnabled() ? 1 : 0;
-  outputObj['bm'] = refThis.getBrowser();
+  outputObj['bm'] = getBrowser();
   outputObj['tgid'] = util.getTgid();
 
   if (Object.keys(frequencyDepth).length) {
@@ -440,58 +451,62 @@ exports.executeAnalyticsPixel = function() { // TDD, i/o : done
   // 	pixelURL += "&gdEn=" + (CONFIG.getGdpr() ? 1 : 0);
   // }
 
-  util.forEachOnObject(window.PWT.bidMap, function (slotID, bmEntry) {
-    refThis.analyticalPixelCallback(slotID, bmEntry, impressionIDMap);
+  util.forEachOnObject(window.PWT.bidMap, (slotID, bmEntry) => {
+    analyticalPixelCallback(slotID, bmEntry, impressionIDMap);
   });
-  util.forEachOnObject(impressionIDMap, function(impressionID, slots) { /* istanbul ignore next */
+  util.forEachOnObject(impressionIDMap, (impressionID, slots) => { /* istanbul ignore next */
     /* istanbul ignore else */
     if (slots.length > 0) {
       outputObj.s = slots;
       outputObj[CONSTANTS.COMMON.IMPRESSION_ID] = window.encodeURIComponent(impressionID);
       if (CONFIG.isFloorPriceModuleEnabled()) {
-        var _floorData = window.PWT.floorData[outputObj[CONSTANTS.COMMON.IMPRESSION_ID]];
+        const _floorData = window.PWT.floorData[outputObj[CONSTANTS.COMMON.IMPRESSION_ID]];
         outputObj['fmv'] = _floorData.floorRequestData ? _floorData.floorRequestData.modelVersion || undefined : undefined,
         outputObj['ft'] = _floorData.floorResponseData ? (_floorData.floorResponseData.enforcements.enforceJS == false ? 0 : 1) : undefined;
       }
       outputObj.psl = slots.psl;
       outputObj.dvc = { 'plt': util.getDevicePlatform()}
       // (new window.Image()).src = pixelURL + "&json=" + window.encodeURIComponent(JSON.stringify(outputObj));
-      util.ajaxRequest(pixelURL, function() {}, 'json=' + window.encodeURIComponent(JSON.stringify(outputObj)), {
+      util.ajaxRequest(pixelURL, () => {}, `json=${window.encodeURIComponent(JSON.stringify(outputObj))}`, {
         contentType: 'application/x-www-form-urlencoded', // as per https://inside.pubmatic.com:8443/confluence/pages/viewpage.action?spaceKey=Products&title=POST+support+for+logger+in+Wrapper-tracker
         withCredentials: true
       });
     }
   });
-};
+}
+
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
 // removeIf(removeLegacyAnalyticsRelatedCode)
-exports.executeMonetizationPixel = function(slotID, theBid) { // TDD, i/o : done
-  var pixelURL = util.generateMonetizationPixel(slotID, theBid);
+export function executeMonetizationPixel(slotID, theBid) { // TDD, i/o : done
+  const pixelURL = util.generateMonetizationPixel(slotID, theBid);
   if (!pixelURL) {
     return;
   }
-  refThis.setImageSrcToPixelURL(pixelURL);
-};
+  setImageSrcToPixelURL(pixelURL);
+}
+
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
 // removeIf(removeLegacyAnalyticsRelatedCode)
 function getAdUnitSizes(bmEntry) {
-  var _adapter = Object.keys(bmEntry.adapters).filter(function(adapter) {
-    if (Object.keys(bmEntry.adapters[adapter].bids).filter(function(bid) {
+  const _adapter = Object.keys(bmEntry.adapters).filter(adapter => {
+    if (Object.keys(bmEntry.adapters[adapter].bids).filter(bid => {
       if (!!bmEntry.adapters[adapter].bids[bid].isWinningBid && bmEntry.adapters[adapter].bids[bid].adFormat === 'native') { return bmEntry.adapters[adapter].bids[bid]; }
     }).length == 1) { return adapter; }
-  })
+  });
   if (_adapter.length) {
 	  	return ['1x1'];
   }
   return bmEntry.getSizes();
 }
+
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
 // removeIf(removeLegacyAnalyticsRelatedCode)
 /* start-test-block */
-exports.getAdUnitSizes = getAdUnitSizes;
+export {getAdUnitSizes};
+
 /* end-test-block */
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
@@ -499,39 +514,44 @@ exports.getAdUnitSizes = getAdUnitSizes;
 function getAdUnitInfo(slotId) {
   return window.PWT.adUnits[slotId] || slotId;
 }
+
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
 // removeIf(removeLegacyAnalyticsRelatedCode)
 /* start-test-block */
-exports.getAdUnitInfo = getAdUnitInfo;
+export {getAdUnitInfo};
+
 /* end-test-block */
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
 // removeIf(removeLegacyAnalyticsRelatedCode)
 function getAdUnitAdFormats(mediaTypes) {
-  var af = mediaTypes ? Object.keys(mediaTypes).map(function(mediatype) {
+  const af = mediaTypes ? Object.keys(mediaTypes).map(mediatype => {
     return CONSTANTS.MEDIATYPE[mediatype.toUpperCase()];
-  }).filter(function(mtype) {
+  }).filter(mtype => {
     return mtype != null
   }) : [];
   return af || [];
 }
+
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
 // removeIf(removeLegacyAnalyticsRelatedCode)
 /* start-test-block */
-exports.getAdUnitAdFormats = getAdUnitAdFormats;
+export {getAdUnitAdFormats};
+
 /* end-test-block */
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
 // Returns property from localstorages slotlevel object
-exports.getSlotLevelFrequencyDepth = function (frequencyDepth, prop, adUnit) {
-  var freqencyValue;
+export function getSlotLevelFrequencyDepth(frequencyDepth, prop, adUnit) {
+  let freqencyValue;
   if (Object.keys(frequencyDepth).length && frequencyDepth.slotLevelFrquencyDepth) {
     freqencyValue = frequencyDepth.slotLevelFrquencyDepth[adUnit] && frequencyDepth.slotLevelFrquencyDepth[adUnit][prop];
   }
   return freqencyValue;
 }
+
 /**
  * Prepare meta object to pass in logger call
  * @param {*} meta
@@ -556,44 +576,44 @@ function getMetadata(meta) {
   return metaObj;
 }
 
-exports.getMetadata = getMetadata;
+export {getMetadata};
 
 // removeIf(removeLegacyAnalyticsRelatedCode)
 function analyticalPixelCallback(slotID, bmEntry, impressionIDMap) { // TDD, i/o : done
   storedObject = localStorage.getItem(PREFIX + window.location.hostname);
-  var frequencyDepth = storedObject !== null ? JSON.parse(storedObject) : {};
-  var usePBSAdapter = CONFIG.usePBSAdapter();
-  var startTime = bmEntry.getCreationTime() || 0;
-  var pslTime = (usePBSAdapter && window.pbsLatency) ? 0 : undefined;
-  var impressionID = bmEntry.getImpressionID();
-  var adUnitInfo = refThis.getAdUnitInfo(slotID);
-  var latencyValue = {};
+  const frequencyDepth = storedObject !== null ? JSON.parse(storedObject) : {};
+  const usePBSAdapter = CONFIG.usePBSAdapter();
+  const startTime = bmEntry.getCreationTime() || 0;
+  let pslTime = (usePBSAdapter && window.pbsLatency) ? 0 : undefined;
+  const impressionID = bmEntry.getImpressionID();
+  const adUnitInfo = getAdUnitInfo(slotID);
+  let latencyValue = {};
   const isAnalytics = true; // this flag is required to get grossCpm and netCpm in dollars instead of adserver currency
   /* istanbul ignore else */
   if (bmEntry.getAnalyticEnabledStatus() && !bmEntry.getExpiredStatus()) {
-    var slotObject = {
+    const slotObject = {
       'sn': slotID,
-      'sz': refThis.getAdUnitSizes(bmEntry),
+      'sz': getAdUnitSizes(bmEntry),
       'au': adUnitInfo.adUnitId || slotID,
       'fskp': window.PWT.floorData ? (window.PWT.floorData[impressionID] ? (window.PWT.floorData[impressionID].floorRequestData ? (window.PWT.floorData[impressionID].floorRequestData.skipped == false ? 0 : 1) : undefined) : undefined) : undefined,
-      'mt': refThis.getAdUnitAdFormats(adUnitInfo.mediaTypes),
+      'mt': getAdUnitAdFormats(adUnitInfo.mediaTypes),
       'ps': [],
-      'bs': refThis.getSlotLevelFrequencyDepth(frequencyDepth, 'bidServed', adUnitInfo.adUnitId),
-      'is': refThis.getSlotLevelFrequencyDepth(frequencyDepth, 'impressionServed', adUnitInfo.adUnitId),
-      'rc': refThis.getSlotLevelFrequencyDepth(frequencyDepth, 'slotCnt', adUnitInfo.adUnitId),
+      'bs': getSlotLevelFrequencyDepth(frequencyDepth, 'bidServed', adUnitInfo.adUnitId),
+      'is': getSlotLevelFrequencyDepth(frequencyDepth, 'impressionServed', adUnitInfo.adUnitId),
+      'rc': getSlotLevelFrequencyDepth(frequencyDepth, 'slotCnt', adUnitInfo.adUnitId),
       'vw': frequencyDepth && frequencyDepth.viewedSlot && frequencyDepth.viewedSlot[adUnitInfo.adUnitId],
       'rf': window.PWT.newAdUnits ? (window.PWT.newAdUnits[impressionID] ? (window.PWT.newAdUnits[impressionID][slotID] ? (window.PWT.newAdUnits[impressionID][slotID]['pubmaticAutoRefresh'] ? (window.PWT.newAdUnits[impressionID][slotID]['pubmaticAutoRefresh']['isRefreshed'] ? 1 : 0) : 0) : 0) : 0) : 0,
     };
     bmEntry.setExpired();
     impressionIDMap[impressionID] = impressionIDMap[impressionID] || [];
 
-    util.forEachOnObject(bmEntry.adapters, function(adapterID, adapterEntry) {
+    util.forEachOnObject(bmEntry.adapters, (adapterID, {bids}) => {
         	/* istanbul ignore else */
       if (CONFIG.getBidPassThroughStatus(adapterID) == 1) {
         return;
       }
 
-      util.forEachOnObject(adapterEntry.bids, function(bidID, theBid) {
+      util.forEachOnObject(bids, (bidID, theBid) => {
         if (usePBSAdapter) {
           // In PrebidServerBidAdapater we are capturing start and end time of request
           // fetching these values here to calculate psl time for logger call
@@ -612,7 +632,7 @@ function analyticalPixelCallback(slotID, bmEntry, impressionIDMap) { // TDD, i/o
           }
         }
 
-        var endTime = theBid.getReceivedTime();
+        const endTime = theBid.getReceivedTime();
         if (adapterID === 'pubmaticServer') {
           if ((util.isOwnProperty(window.PWT.owLatency, impressionID)) &&
 						(util.isOwnProperty(window.PWT.owLatency[impressionID], 'startTime')) &&
@@ -620,9 +640,9 @@ function analyticalPixelCallback(slotID, bmEntry, impressionIDMap) { // TDD, i/o
             pslTime = (window.PWT.owLatency[impressionID].endTime - window.PWT.owLatency[impressionID].startTime);
           } else {
             pslTime = 0;
-            util.log('Logging pubmaticServer latency as 0 for impressionID: ' + impressionID);
+            util.log(`Logging pubmaticServer latency as 0 for impressionID: ${impressionID}`);
           }
-          util.log('PSL logging: time logged for id ' + impressionID + ' is ' + pslTime);
+          util.log(`PSL logging: time logged for id ${impressionID} is ${pslTime}`);
           return;
         }
 
@@ -658,7 +678,7 @@ function analyticalPixelCallback(slotID, bmEntry, impressionIDMap) { // TDD, i/o
         if ((adapterID === 'pubmatic' || adapterID === 'pubmatic2') && (theBid.getDefaultBidStatus() || (theBid.getPostTimeoutStatus() && theBid.getGrossEcpm(isAnalytics) == 0))) {
           return;
         }
-        var pbbid = theBid.getPbBid();
+        const pbbid = theBid.getPbBid();
 
         // todo: take all these key names from constants
         slotObject['ps'].push({
@@ -669,7 +689,7 @@ function analyticalPixelCallback(slotID, bmEntry, impressionIDMap) { // TDD, i/o
           'db': theBid.getDefaultBidStatus(),
           'kgpv': theBid.getKGPV(),
           'kgpsv': theBid.getKGPV(true),
-          'psz': theBid.getWidth() + 'x' + theBid.getHeight(),
+          'psz': `${theBid.getWidth()}x${theBid.getHeight()}`,
           'eg': theBid.getGrossEcpm(isAnalytics),
           'en': theBid.getNetEcpm(isAnalytics),
           'di': theBid.getDealID(),
@@ -686,7 +706,7 @@ function analyticalPixelCallback(slotID, bmEntry, impressionIDMap) { // TDD, i/o
           'ocry': CONFIG.getAdServerCurrency() ? theBid.getOriginalCurrency() : CONSTANTS.COMMON.ANALYTICS_CURRENCY,
           'piid': theBid.getsspID(),
           'frv': theBid.getServerSideStatus() ? undefined : (pbbid ? (pbbid.floorData ? pbbid.floorData.floorRuleValue : undefined) : undefined),
-          'md': pbbid ? refThis.getMetadata(pbbid.meta) : undefined,
+          'md': pbbid ? getMetadata(pbbid.meta) : undefined,
         });
       })
     });
@@ -702,11 +722,13 @@ function analyticalPixelCallback(slotID, bmEntry, impressionIDMap) { // TDD, i/o
     }
   }
 }
+
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
 // removeIf(removeLegacyAnalyticsRelatedCode)
 /* start-test-block */
-exports.analyticalPixelCallback = analyticalPixelCallback;
+export {analyticalPixelCallback};
+
 /* end-test-block */
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
@@ -720,8 +742,8 @@ exports.analyticalPixelCallback = analyticalPixelCallback;
  * @param {*} useProtocol
  * @returns
  */
-exports.setImageSrcToPixelURL = function (pixelURL, useProtocol) { // TDD, i/o : done
-  var img = new window.Image();
+export function setImageSrcToPixelURL(pixelURL, useProtocol) { // TDD, i/o : done
+  const img = new window.Image();
   if (useProtocol != undefined && !useProtocol) {
     img.src = pixelURL;
     return;
@@ -730,13 +752,14 @@ exports.setImageSrcToPixelURL = function (pixelURL, useProtocol) { // TDD, i/o :
     pixelURL = CONSTANTS.COMMON.PROTOCOL + pixelURL;
   }
   img.src = pixelURL;
-};
+}
+
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
-exports.getAllPartnersBidStatuses = function (bidMaps, divIds) {
-  var status = true;
+export function getAllPartnersBidStatuses(bidMaps, divIds) {
+  let status = true;
 
-  util.forEachOnArray(divIds, function (key, divId) {
+  util.forEachOnArray(divIds, (key, divId) => {
     // OLD APPROACH: check if we have got bids per bidder for each slot
     // bidMaps[divId] && util.forEachOnObject(bidMaps[divId].adapters, function (adapterID, adapter) {
     // 	util.forEachOnObject(adapter.bids, function (bidId, theBid) {
@@ -749,7 +772,7 @@ exports.getAllPartnersBidStatuses = function (bidMaps, divIds) {
     }
   });
   return status;
-};
+}
 
 // removeIf(removeNativeRelatedCode)
 /**
@@ -757,8 +780,8 @@ exports.getAllPartnersBidStatuses = function (bidMaps, divIds) {
  * in case of native. On click of native create element
  * @param {*} event
  */
-exports.loadTrackers = function(event) {
-  var bidId = util.getBidFromEvent(event);
+export function loadTrackers(event) {
+  const bidId = util.getBidFromEvent(event);
   window.parent.postMessage(
     JSON.stringify({
       pwt_type: '3',
@@ -768,7 +791,8 @@ exports.loadTrackers = function(event) {
     }),
     '*'
   );
-};
+}
+
 // endRemoveIf(removeNativeRelatedCode)
 
 // removeIf(removeNativeRelatedCode)
@@ -776,7 +800,7 @@ exports.loadTrackers = function(event) {
  * function takes bidID and post a message to parent pwt.js to execute monetization pixels.
  * @param {*} bidID
  */
-exports.executeTracker = function(bidID) {
+export function executeTracker(bidID) {
   window.parent.postMessage(
     JSON.stringify({
       pwt_type: '3',
@@ -786,7 +810,8 @@ exports.executeTracker = function(bidID) {
     }),
     '*'
   );
-};
+}
+
 // endRemoveIf(removeNativeRelatedCode)
 
 // removeIf(removeNativeRelatedCode)
@@ -798,8 +823,8 @@ exports.executeTracker = function(bidID) {
  * @param {*} bidDetails
  * @param {*} action
  */
-exports.fireTracker = function(bidDetails, action) {
-  var trackers;
+export function fireTracker(bidDetails, action) {
+  let trackers;
 
   if (action === 'click') {
     trackers = bidDetails['native'] && bidDetails['native'].ortb &&
@@ -808,14 +833,14 @@ exports.fireTracker = function(bidDetails, action) {
     const nativeResponse = bidDetails.native.ortb || bidDetails.native;
 
     const impTrackers = (nativeResponse.eventtrackers || [])
-      .filter(function(tracker) {
-        tracker.event === TRACKER_EVENTS.impression
+      .filter(({event}) => {
+        event === TRACKER_EVENTS.impression
       });
 
     const tally = {img: [], js: []};
-    impTrackers.forEach(function(tracker) {
-      if (TRACKER_METHODS.hasOwnProperty(tracker.method)) {
-        tally[TRACKER_METHODS[tracker.method]].push(tracker.url);
+    impTrackers.forEach(({method, url}) => {
+      if (TRACKER_METHODS.hasOwnProperty(method)) {
+        tally[TRACKER_METHODS[method]].push(url);
       }
     });
 
@@ -833,19 +858,20 @@ exports.fireTracker = function(bidDetails, action) {
     }
   }
 
-  (trackers || []).forEach(function(url) { refThis.setImageSrcToPixelURL(url, false); });
-};
+  (trackers || []).forEach(url => { setImageSrcToPixelURL(url, false); });
+}
+
 // endRemoveIf(removeNativeRelatedCode)
 
 // this function generates all satndard key-value pairs for a given bid and setup, set these key-value pairs in an object
 // todo: write unit test cases
 // removeIf(removeLegacyAnalyticsRelatedCode)
-exports.setStandardKeys = function(winningBid, keyValuePairs) {
+export function setStandardKeys(winningBid, keyValuePairs) {
   if (winningBid) {
     keyValuePairs[ CONSTANTS.WRAPPER_TARGETING_KEYS.BID_ID ] = winningBid.getBidID();
     keyValuePairs[ CONSTANTS.WRAPPER_TARGETING_KEYS.BID_STATUS ] = winningBid.getStatus();
     keyValuePairs[ CONSTANTS.WRAPPER_TARGETING_KEYS.BID_ECPM ] = winningBid.getNetEcpm().toFixed(CONSTANTS.COMMON.BID_PRECISION);
-    var dealID = winningBid.getDealID();
+    const dealID = winningBid.getDealID();
     if (dealID) {
       keyValuePairs[ CONSTANTS.WRAPPER_TARGETING_KEYS.BID_DEAL_ID ] = dealID;
     }
@@ -853,7 +879,7 @@ exports.setStandardKeys = function(winningBid, keyValuePairs) {
     keyValuePairs[ CONSTANTS.WRAPPER_TARGETING_KEYS.PUBLISHER_ID ] = CONFIG.getPublisherId();
     keyValuePairs[ CONSTANTS.WRAPPER_TARGETING_KEYS.PROFILE_ID ] = CONFIG.getProfileID();
     keyValuePairs[ CONSTANTS.WRAPPER_TARGETING_KEYS.PROFILE_VERSION_ID ] = CONFIG.getProfileDisplayVersionID();
-    keyValuePairs[ CONSTANTS.WRAPPER_TARGETING_KEYS.BID_SIZE ] = winningBid.width + 'x' + winningBid.height;
+    keyValuePairs[ CONSTANTS.WRAPPER_TARGETING_KEYS.BID_SIZE ] = `${winningBid.width}x${winningBid.height}`;
     keyValuePairs[ CONSTANTS.WRAPPER_TARGETING_KEYS.PLATFORM_KEY ] = (winningBid.getAdFormat() == CONSTANTS.FORMAT_VALUES.VIDEO && winningBid.getcacheUUID()) ? CONSTANTS.PLATFORM_VALUES.VIDEO : (winningBid.getNative() ? CONSTANTS.PLATFORM_VALUES.NATIVE : CONSTANTS.PLATFORM_VALUES.DISPLAY);
     if (winningBid.getAdFormat() == CONSTANTS.FORMAT_VALUES.VIDEO && winningBid.getcacheUUID()) {
       keyValuePairs[ CONSTANTS.WRAPPER_TARGETING_KEYS.CACHE_PATH ] = CONSTANTS.CONFIG.CACHE_PATH;
@@ -865,17 +891,18 @@ exports.setStandardKeys = function(winningBid, keyValuePairs) {
     	util.logWarning(winningBid);
   }
 }
+
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
 // removeIf(removeLegacyAnalyticsRelatedCode)
-exports.getBrowser = function() {
-  var regExBrowsers = CONSTANTS.REGEX_BROWSERS;
-  var browserMapping = CONSTANTS.BROWSER_MAPPING;
+export function getBrowser() {
+  const regExBrowsers = CONSTANTS.REGEX_BROWSERS;
+  const browserMapping = CONSTANTS.BROWSER_MAPPING;
 
-  var userAgent = navigator.userAgent;
-  var browserName = userAgent == null ? -1 : 0;
+  const userAgent = navigator.userAgent;
+  let browserName = userAgent == null ? -1 : 0;
   if (userAgent) {
-    for (var i = 0; i < regExBrowsers.length; i++) {
+    for (let i = 0; i < regExBrowsers.length; i++) {
       if (userAgent.match(regExBrowsers[i])) {
         browserName = browserMapping[i];
         break;

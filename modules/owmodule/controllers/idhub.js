@@ -2,16 +2,16 @@
 // tdod: we can still reduce the build size for idhub by,
 // 			- create a separate constants.js with limited required functions
 
-var CONFIG = require('../config.idhub.js');
-var CONSTANTS = require('../constants.js');
-var util = require('../util.idhub.js');
-var COMMON_CONFIG = require('../common.config.js');
-var refThis = this;
-var pbNameSpace = CONFIG.isIdentityOnly() ? CONSTANTS.COMMON.IH_NAMESPACE : CONSTANTS.COMMON.PREBID_NAMESPACE;
+import CONFIG from '../config.idhub.js';
 
-var isPubmaticIHAnalyticsEnabled = CONFIG.isPubMaticIHAnalyticsEnabled();
+import CONSTANTS from '../constants.js';
+import util from '../util.idhub.js';
+import COMMON_CONFIG from '../common.config.js';
+const pbNameSpace = CONFIG.isIdentityOnly() ? CONSTANTS.COMMON.IH_NAMESPACE : CONSTANTS.COMMON.PREBID_NAMESPACE;
 
-refThis.enablePubMaticIdentityAnalyticsIfRequired = function() {
+const isPubmaticIHAnalyticsEnabled = CONFIG.isPubMaticIHAnalyticsEnabled();
+
+this.enablePubMaticIdentityAnalyticsIfRequired = () => {
   window.IHPWT.ihAnalyticsAdapterExpiry = CONFIG.getIHAnalyticsAdapterExpiry();
   if (isPubmaticIHAnalyticsEnabled && util.isFunction(window[pbNameSpace].enableAnalytics)) {
     window[pbNameSpace].enableAnalytics({
@@ -27,10 +27,10 @@ refThis.enablePubMaticIdentityAnalyticsIfRequired = function() {
   }
 }
 
-refThis.setConfig = function() {
+this.setConfig = () => {
   if (util.isFunction(window[pbNameSpace].setConfig) || typeof window[pbNameSpace].setConfig == 'function') {
     if (CONFIG.isIdentityOnly()) {
-      var prebidConfig = {
+      const prebidConfig = {
         debug: util.isDebugLogEnabled(),
         userSync: {
           syncDelay: 2000,
@@ -48,9 +48,9 @@ refThis.setConfig = function() {
           allowAuctionWithoutConsent: CONFIG.getAwc(),
           defaultGdprScope: true
         };
-        var gdprActionTimeout = COMMON_CONFIG.getGdprActionTimeout()
+        const gdprActionTimeout = COMMON_CONFIG.getGdprActionTimeout();
         if (gdprActionTimeout) {
-          util.log('GDPR IS ENABLED, TIMEOUT: ' + prebidConfig['consentManagement']['gdpr']['timeout'] + ', ACTION TIMEOUT: ' + gdprActionTimeout);
+          util.log(`GDPR IS ENABLED, TIMEOUT: ${prebidConfig['consentManagement']['gdpr']['timeout']}, ACTION TIMEOUT: ${gdprActionTimeout}`);
           prebidConfig['consentManagement']['gdpr']['actionTimeout'] = gdprActionTimeout;
         }
       }
@@ -73,36 +73,36 @@ refThis.setConfig = function() {
       window[pbNameSpace].setConfig(prebidConfig);
     }
     if (CONFIG.isUserIdModuleEnabled() && CONFIG.isIdentityOnly()) {
-      refThis.enablePubMaticIdentityAnalyticsIfRequired();
+      enablePubMaticIdentityAnalyticsIfRequired();
     }
     util.isFunction(window[pbNameSpace].firePubMaticIHLoggerCall) && window[pbNameSpace].firePubMaticIHLoggerCall();
     window[pbNameSpace].requestBids([]);
   }
 };
 
-exports.initIdHub = function(win) {
+export function initIdHub(win) {
   if (CONFIG.isUserIdModuleEnabled()) {
     // TODO : Check for Prebid loaded and debug logs
-    refThis.setConfig();
+    setConfig();
     if (CONFIG.isIdentityOnly()) {
-      if (CONFIG.getIdentityConsumers().indexOf(CONSTANTS.COMMON.PREBID) > -1 && !util.isUndefined(win[CONFIG.PBJS_NAMESPACE]) && !util.isUndefined(win[CONFIG.PBJS_NAMESPACE].que)) {
-        win[CONFIG.PBJS_NAMESPACE].que.unshift(function() {
-          var vdetails = win[CONFIG.PBJS_NAMESPACE].version.split('.');
+      if (CONFIG.getIdentityConsumers().includes(CONSTANTS.COMMON.PREBID) && !util.isUndefined(win[CONFIG.PBJS_NAMESPACE]) && !util.isUndefined(win[CONFIG.PBJS_NAMESPACE].que)) {
+        win[CONFIG.PBJS_NAMESPACE].que.unshift(() => {
+          const vdetails = win[CONFIG.PBJS_NAMESPACE].version.split('.');
           // todo: check the oldest pbjs version in use, do we still need this check?
           if (vdetails.length === 3 && (+vdetails[0].split('v')[1] > 3 || (vdetails[0] === 'v3' && +vdetails[1] >= 3))) {
-            util.log('Adding On Event ' + win[CONFIG.PBJS_NAMESPACE] + '.addAddUnits()');
-            win[CONFIG.PBJS_NAMESPACE].onEvent('addAdUnits', function () {
+            util.log(`Adding On Event ${win[CONFIG.PBJS_NAMESPACE]}.addAddUnits()`);
+            win[CONFIG.PBJS_NAMESPACE].onEvent('addAdUnits', () => {
               util.updateAdUnits(win[CONFIG.PBJS_NAMESPACE]['adUnits']);
             });
-            win[CONFIG.PBJS_NAMESPACE].onEvent('beforeRequestBids', function (adUnits) {
+            win[CONFIG.PBJS_NAMESPACE].onEvent('beforeRequestBids', adUnits => {
               util.updateAdUnits(adUnits);
             });
           } else {
             // todo: check the oldest pbjs version in use, do we still need this check?
-            util.log('Adding Hook on' + win[CONFIG.PBJS_NAMESPACE] + '.addAddUnits()');
-            var theObject = win[CONFIG.PBJS_NAMESPACE];
-            var functionName = 'addAdUnits';
-            util.addHookOnFunction(theObject, false, functionName, refThis.newAddAdUnitFunction);
+            util.log(`Adding Hook on${win[CONFIG.PBJS_NAMESPACE]}.addAddUnits()`);
+            const theObject = win[CONFIG.PBJS_NAMESPACE];
+            const functionName = 'addAdUnits';
+            util.addHookOnFunction(theObject, false, functionName, newAddAdUnitFunction);
           }
         });
         util.log('Identity Only Enabled and setting config');
@@ -111,14 +111,14 @@ exports.initIdHub = function(win) {
       }
     }
   }
-};
+}
 
-exports.init = function(win) {
+export function init(win) {
   if (util.isObject(win)) {
-    refThis.initIdHub(win);
+    initIdHub(win);
     return true;
   } else {
     return false;
   }
-};
+}
 // endRemoveIf(removeIdHubOnlyRelatedCode)

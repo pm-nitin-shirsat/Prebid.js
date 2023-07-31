@@ -1,12 +1,11 @@
-import * as util from "./util.js";
-import * as controller from "./controllers/custom.js";
-import * as bidManager from "./bidManager.js";
-import * as CONSTANTS from "./constants.js";
-import * as CONFIG from "./config.js";
-import * as conf from "./conf.js";
-import * as prebid from "./adapters/prebid.js";
-
-var metaInfo = util.getMetaInfo(window);
+import * as util from './util.js';
+import * as controller from './controllers/custom.js';
+import * as bidManager from './bidManager.js';
+import * as CONSTANTS from './constants.js';
+import * as CONFIG from './config.js';
+import * as conf from './conf.js';
+import * as prebid from './adapters/prebid.js';
+const metaInfo = util.getMetaInfo(window);
 window.PWT = window.PWT || {};
 window.PWT.bidMap = window.PWT.bidMap || {};
 window.PWT.bidIdMap = window.PWT.bidIdMap || {};
@@ -26,10 +25,10 @@ window.PWT.udpv = window.PWT.udpv || util.findQueryParamInURL(metaInfo.isIframe 
 util.findQueryParamInURL(metaInfo.isIframe ? metaInfo.refURL : metaInfo.pageURL, 'pwtc') && util.enableDebugLog();
 util.findQueryParamInURL(metaInfo.isIframe ? metaInfo.refURL : metaInfo.pageURL, 'pwtvc') && util.enableVisualDebugLog();
 
-var isPrebidPubMaticAnalyticsEnabled = CONFIG.isPrebidPubMaticAnalyticsEnabled();
+const isPrebidPubMaticAnalyticsEnabled = CONFIG.isPrebidPubMaticAnalyticsEnabled();
 
-window.PWT.displayCreative = function(theDocument, bidID) {
-  util.log('In displayCreative for: ' + bidID);
+window.PWT.displayCreative = (theDocument, bidID) => {
+  util.log(`In displayCreative for: ${bidID}`);
   if (isPrebidPubMaticAnalyticsEnabled) {
     window[CONSTANTS.COMMON.PREBID_NAMESPACE].renderAd(theDocument, bidID);
   } else {
@@ -39,9 +38,9 @@ window.PWT.displayCreative = function(theDocument, bidID) {
   }
 };
 
-window.PWT.displayPMPCreative = function(theDocument, values, priorityArray) {
-  util.log('In displayPMPCreative for: ' + values);
-  var bidID = util.getBididForPMP(values, priorityArray);
+window.PWT.displayPMPCreative = (theDocument, values, priorityArray) => {
+  util.log(`In displayPMPCreative for: ${values}`);
+  const bidID = util.getBididForPMP(values, priorityArray);
   if (bidID) {
     if (isPrebidPubMaticAnalyticsEnabled) {
       window[CONSTANTS.COMMON.PREBID_NAMESPACE].renderAd(theDocument, bidID);
@@ -54,9 +53,9 @@ window.PWT.displayPMPCreative = function(theDocument, values, priorityArray) {
 };
 
 window.PWT.sfDisplayPMPCreative = function(theDocument, values, priorityArray) {
-  util.log('In sfDisplayPMPCreative for: ' + values);
-  this.isSafeFrame = true;
-  var bidID = util.getBididForPMP(values, priorityArray);
+  util.log(`In sfDisplayPMPCreative for: ${values}`);
+  isSafeFrame = true;
+  const bidID = util.getBididForPMP(values, priorityArray);
   if (bidID) {
     if (CONFIG.isPrebidPubMaticAnalyticsEnabled()) {
       // ucTag.renderAd(theDocument, {adId: bidID, pubUrl: document.referrer});
@@ -74,14 +73,14 @@ window.PWT.sfDisplayPMPCreative = function(theDocument, values, priorityArray) {
 };
 
 // removeIf(removeNativeRelatedCode)
-window.PWT.initNativeTrackers = function(theDocument, bidID) {
-  util.log('In startTrackers for: ' + bidID);
+window.PWT.initNativeTrackers = (theDocument, bidID) => {
+  util.log(`In startTrackers for: ${bidID}`);
   util.addEventListenerForClass(window, 'click', CONSTANTS.COMMON.OW_CLICK_NATIVE, bidManager.loadTrackers);
   bidManager.executeTracker(bidID);
 };
 // endRemoveIf(removeNativeRelatedCode)
 
-window.PWT.getUserIds = function() {
+window.PWT.getUserIds = () => {
   return util.getUserIds();
 };
 
@@ -90,11 +89,11 @@ window.OWT = {
   externalBidderStatuses: {}
 };
 
-window.OWT.registerExternalBidders = function(divIds) {
+window.OWT.registerExternalBidders = divIds => {
   window.OWT.notifyCount++;
 
-  util.forEachOnArray(divIds, function (key, divId) {
-    util.log('registerExternalBidders: ' + divId);
+  util.forEachOnArray(divIds, (key, divId) => {
+    util.log(`registerExternalBidders: ${divId}`);
     window.OWT.externalBidderStatuses[divId] = {
       id: window.OWT.notifyCount,
       status: false
@@ -104,10 +103,10 @@ window.OWT.registerExternalBidders = function(divIds) {
   return window.OWT.notifyCount;
 };
 
-window.OWT.notifyExternalBiddingComplete = function(notifyId) {
-  util.forEachOnObject(window.OWT.externalBidderStatuses, function (key, obj) {
+window.OWT.notifyExternalBiddingComplete = notifyId => {
+  util.forEachOnObject(window.OWT.externalBidderStatuses, (key, obj) => {
     if (obj && (obj.id === notifyId)) {
-      util.log('notify externalBidding complete: ' + key);
+      util.log(`notify externalBidding complete: ${key}`);
       window.OWT.externalBidderStatuses[key] = {
         id: obj.id,
         status: true
@@ -117,14 +116,14 @@ window.OWT.notifyExternalBiddingComplete = function(notifyId) {
 };
 
 // removeIf(removeLegacyAnalyticsRelatedCode)
-window.PWT.UpdateVastWithTracker = function(bid, vast) {
+window.PWT.UpdateVastWithTracker = (bid, vast) => {
   return util.UpdateVastWithTracker(bid, vast);
 };
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
 // removeIf(removeInStreamRelatedCode)
-window.PWT.generateDFPURL = function(adUnit, cust_params) {
-  var dfpurl = '';
+window.PWT.generateDFPURL = (adUnit, cust_params) => {
+  let dfpurl = '';
   if (!adUnit || !util.isObject(adUnit)) {
     util.logError('An AdUnit should be an Object', adUnit);
   }
@@ -134,11 +133,11 @@ window.PWT.generateDFPURL = function(adUnit, cust_params) {
   } else {
     util.logWarning('No bid found for given adUnit');
   }
-  var params = {
-    adUnit: adUnit,
+  const params = {
+    adUnit,
     params: {
       iu: adUnit.adUnitId,
-      cust_params: cust_params,
+      cust_params,
       output: 'vast'
     }
   };
@@ -151,14 +150,14 @@ window.PWT.generateDFPURL = function(adUnit, cust_params) {
 // endRemoveIf(removeInStreamRelatedCode)
 
 // removeIf(removeInStreamRelatedCode)
-window.PWT.getCustomParamsForDFPVideo = function(customParams, bid) {
+window.PWT.getCustomParamsForDFPVideo = (customParams, bid) => {
   return util.getCustomParamsForDFPVideo(customParams, bid);
 };
 // endRemoveIf(removeInStreamRelatedCode)
 
-window.PWT.setAuctionTimeout = function(timeout) {
+window.PWT.setAuctionTimeout = timeout => {
   if (!isNaN(timeout)) {
-    util.log('updating aution timeout from: ' + conf.pwt.t + ' to: ' + timeout);
+    util.log(`updating aution timeout from: ${conf.pwt.t} to: ${timeout}`);
     conf.pwt.t = timeout;
   }
 }

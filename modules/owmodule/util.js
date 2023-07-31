@@ -1,164 +1,170 @@
 // todo
 //  pageURL refURL protocol related functions
 // forEachOnArray
-import * as CONFIG from "./config.js";
-import * as CONSTANTS from "./constants.js";
-import * as conf from "./conf.js";
-import * as BID from "./bid.js";
-import * as bidManager from "./bidManager.js";
+import * as CONFIG from './config.js';
 
-var debugLogIsEnabled = false;
+import * as CONSTANTS from './constants.js';
+import * as conf from './conf.js';
+import * as BID from './bid.js';
+import * as bidManager from './bidManager.js';
 
-/* start-test-block */
-exports.debugLogIsEnabled = debugLogIsEnabled;
-/* end-test-block */
-var visualDebugLogIsEnabled = false;
+const debugLogIsEnabled = false;
 
 /* start-test-block */
-exports.visualDebugLogIsEnabled = visualDebugLogIsEnabled;
+export {debugLogIsEnabled};
+
 /* end-test-block */
-var typeArray = 'Array';
-var typeString = 'String';
-var typeFunction = 'Function';
-var typeNumber = 'Number';
-var toString = Object.prototype.toString;
-this.idsAppendedToAdUnits = false;
-var mediaTypeConfigPerSlot = {};
-exports.mediaTypeConfig = mediaTypeConfigPerSlot;
-var pbNameSpace = parseInt(conf[CONSTANTS.CONFIG.COMMON][CONSTANTS.COMMON.IDENTITY_ONLY] || CONSTANTS.CONFIG.DEFAULT_IDENTITY_ONLY) ? CONSTANTS.COMMON.IH_NAMESPACE : CONSTANTS.COMMON.PREBID_NAMESPACE;
-exports.pbNameSpace = pbNameSpace;
+const visualDebugLogIsEnabled = false;
+
+/* start-test-block */
+export {visualDebugLogIsEnabled};
+
+/* end-test-block */
+const typeArray = 'Array';
+const typeString = 'String';
+const typeFunction = 'Function';
+const typeNumber = 'Number';
+const toString = Object.prototype.toString;
+idsAppendedToAdUnits = false;
+const mediaTypeConfigPerSlot = {};
+export {mediaTypeConfigPerSlot as mediaTypeConfig};
+const pbNameSpace = parseInt(conf[CONSTANTS.CONFIG.COMMON][CONSTANTS.COMMON.IDENTITY_ONLY] || CONSTANTS.CONFIG.DEFAULT_IDENTITY_ONLY) ? CONSTANTS.COMMON.IH_NAMESPACE : CONSTANTS.COMMON.PREBID_NAMESPACE;
+export {pbNameSpace};
+
 function isA(object, testForType) {
-  return toString.call(object) === '[object ' + testForType + ']';
+  return toString.call(object) === `[object ${testForType}]`;
 }
 
 /* start-test-block */
-exports.isA = isA;
+export {isA};
+
 /* end-test-block */
 
-exports.isFunction = function (object) {
-  return this.isA(object, typeFunction);
-};
+export function isFunction(object) {
+  return isA(object, typeFunction);
+}
 
-exports.isString = function (object) {
-  return this.isA(object, typeString);
-};
+export function isString(object) {
+  return isA(object, typeString);
+}
 
-exports.isArray = function (object) {
-  return this.isA(object, typeArray);
-};
+export function isArray(object) {
+  return isA(object, typeArray);
+}
 
-exports.isNumber = function(object) {
-  return this.isA(object, typeNumber);
-};
+export function isNumber(object) {
+  return isA(object, typeNumber);
+}
 
-exports.isObject = function(object) {
+export function isObject(object) {
   return typeof object === 'object' && object !== null;
-};
+}
 
-exports.isOwnProperty = function(theObject, proertyName) {
+export function isOwnProperty(theObject, proertyName) {
   /* istanbul ignore else */
-  if (this.isObject(theObject) && theObject.hasOwnProperty) {
+  if (isObject(theObject) && theObject.hasOwnProperty) {
     return theObject.hasOwnProperty(proertyName);
   }
   return false;
-};
+}
 
-exports.isUndefined = function(object) {
+export function isUndefined(object) {
   return typeof object === 'undefined';
-};
+}
 
-exports.enableDebugLog = function() {
-  this.debugLogIsEnabled = true;
-};
+export function enableDebugLog() {
+  debugLogIsEnabled = true;
+}
 
-exports.isDebugLogEnabled = function() {
-  return this.debugLogIsEnabled;
-};
+export function isDebugLogEnabled() {
+  return debugLogIsEnabled;
+}
 
-exports.enableVisualDebugLog = function() {
-  this.debugLogIsEnabled = true;
-  this.visualDebugLogIsEnabled = true;
-};
+export function enableVisualDebugLog() {
+  debugLogIsEnabled = true;
+  visualDebugLogIsEnabled = true;
+}
 
-exports.isEmptyObject = function(object) {
-  return this.isObject(object) && Object.keys(object).length === 0;
-};
+export function isEmptyObject(object) {
+  return isObject(object) && Object.keys(object).length === 0;
+}
 
 // todo: move...
-var constDebugInConsolePrependWith = '[OpenWrap] : ';
-var constErrorInConsolePrependWith = '[OpenWrap] : [Error]';
+const constDebugInConsolePrependWith = '[OpenWrap] : ';
+const constErrorInConsolePrependWith = '[OpenWrap] : [Error]';
 
-exports.log = function(data) {
-  if (this.debugLogIsEnabled && console && this.isFunction(console.log)) { // eslint-disable-line no-console
-    if (this.isString(data)) {
-      console.log((new Date()).getTime() + ' : ' + constDebugInConsolePrependWith + data); // eslint-disable-line no-console
+export function log(data) {
+  if (debugLogIsEnabled && console && isFunction(console.log)) { // eslint-disable-line no-console
+    if (isString(data)) {
+      console.log(`${(new Date()).getTime()} : ${constDebugInConsolePrependWith}${data}`); // eslint-disable-line no-console
     } else {
       console.log(data); // eslint-disable-line no-console
     }
   }
-};
+}
 
-exports.logError = function(data) {
-  if (this.debugLogIsEnabled && console && this.isFunction(console.log)) { // eslint-disable-line no-console
-    if (this.isString(data)) {
-      console.error((new Date()).getTime() + ' : ' + constDebugInConsolePrependWith + data); // eslint-disable-line no-console
+export function logError(data) {
+  if (debugLogIsEnabled && console && isFunction(console.log)) { // eslint-disable-line no-console
+    if (isString(data)) {
+      console.error(`${(new Date()).getTime()} : ${constDebugInConsolePrependWith}${data}`); // eslint-disable-line no-console
     } else {
       console.error(data); // eslint-disable-line no-console
     }
   }
-};
+}
 
-exports.logWarning = function(data) {
-  if (this.debugLogIsEnabled && console && this.isFunction(console.log)) { // eslint-disable-line no-console
-    if (this.isString(data)) {
-      console.warn((new Date()).getTime() + ' : ' + constDebugInConsolePrependWith + data); // eslint-disable-line no-console
+export function logWarning(data) {
+  if (debugLogIsEnabled && console && isFunction(console.log)) { // eslint-disable-line no-console
+    if (isString(data)) {
+      console.warn(`${(new Date()).getTime()} : ${constDebugInConsolePrependWith}${data}`); // eslint-disable-line no-console
     } else {
       console.warn(data); // eslint-disable-line no-console
     }
   }
-};
+}
 
-exports.error = function(data) {
-  console.log((new Date()).getTime() + ' : ' + constErrorInConsolePrependWith, data); // eslint-disable-line no-console
-};
+export function error(data) {
+  console.log(`${(new Date()).getTime()} : ${constErrorInConsolePrependWith}`, data); // eslint-disable-line no-console
+}
 
-exports.getCurrentTimestampInMs = function() {
-  var date = new window.Date();
+export function getCurrentTimestampInMs() {
+  const date = new window.Date();
   return date.getTime();
-};
+}
 
-exports.getCurrentTimestamp = function() {
-  var date = new Date();
+export function getCurrentTimestamp() {
+  const date = new Date();
   return Math.round(date.getTime() / 1000);
-};
+}
 
-var utilGetIncrementalInteger = (function() {
-  var count = 0;
-  return function() {
+const utilGetIncrementalInteger = (() => {
+  let count = 0;
+  return () => {
     count++;
     return count;
   };
 })();
 
 /* start-test-block */
-exports.utilGetIncrementalInteger = utilGetIncrementalInteger;
+export {utilGetIncrementalInteger};
+
 /* end-test-block */
 
-exports.getUniqueIdentifierStr = function() {
+export function getUniqueIdentifierStr() {
   return utilGetIncrementalInteger() + window.Math.random().toString(16).substr(2);
-};
+}
 
 // removeIf(removeLegacyAnalyticsRelatedCode)
-exports.copyKeyValueObject = function(copyTo, copyFrom) {
+export function copyKeyValueObject(copyTo, copyFrom) {
   /* istanbul ignore else */
-  if (this.isObject(copyTo) && this.isObject(copyFrom)) {
-    var utilRef = this;
-    this.forEachOnObject(copyFrom, function(key, value) {
+  if (isObject(copyTo) && isObject(copyFrom)) {
+    const utilRef = this;
+    forEachOnObject(copyFrom, function(key, value) {
       copyFrom[key] = utilRef.isArray(value) ? value : [value];
       if (utilRef.isOwnProperty(copyTo, key)) {
         // copyTo[key].push.apply(copyTo[key], value);
-        if (!this.isArray(copyTo[key])) {
-          var temp = copyTo[key];
+        if (!isArray(copyTo[key])) {
+          const temp = copyTo[key];
           copyTo[key] = [temp];
         }
         copyTo[key].push(value);
@@ -167,33 +173,33 @@ exports.copyKeyValueObject = function(copyTo, copyFrom) {
       }
     });
   }
-};
+}
+
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
-exports.getIncrementalInteger = (function() {
-  var count = 0;
-  return function() {
+export const getIncrementalInteger = (() => {
+  let count = 0;
+  return () => {
     count++;
     return count;
   };
 })();
 
-exports.generateUUID = function() {
-  var d = new window.Date().getTime();
-  // todo: this.pageURL ???
-  var url = window.decodeURIComponent(this.pageURL).toLowerCase().replace(/[^a-z,A-Z,0-9]/gi, '');
-  var urlLength = url.length
-		;
+export function generateUUID() {
+  let d = new window.Date().getTime();
+  // todo: pageURL ???
+  const url = window.decodeURIComponent(pageURL).toLowerCase().replace(/[^a-z,A-Z,0-9]/gi, '');
+  const urlLength = url.length;
 
   // todo: uncomment it,  what abt performance
-  // if(win.performance && this.isFunction(win.performance.now)){
+  // if(win.performance && isFunction(win.performance.now)){
   //    d += performance.now();
   // }
 
-  var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx-zzzzz'.replace(/[xyz]/g, function(c) {
-    var r = (d + Math.random() * 16) % 16 | 0;
+  const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx-zzzzz'.replace(/[xyz]/g, c => {
+    const r = (d + Math.random() * 16) % 16 | 0;
     d = Math.floor(d / 16);
-    var op;
+    let op;
     switch (c) {
       case 'x':
         op = r;
@@ -209,33 +215,32 @@ exports.generateUUID = function() {
   });
 
   return uuid;
-};
+}
 
-var macroRegexFlag = 'g';
-var constCommonMacroForWidthRegExp = new RegExp(CONSTANTS.MACROS.WIDTH, macroRegexFlag);
-var constCommonMacroForHeightRegExp = new RegExp(CONSTANTS.MACROS.HEIGHT, macroRegexFlag);
-var constCommonMacroForAdUnitIDRegExp = new RegExp(CONSTANTS.MACROS.AD_UNIT_ID, macroRegexFlag);
-var constCommonMacroForAdUnitIndexRegExp = new RegExp(CONSTANTS.MACROS.AD_UNIT_INDEX, macroRegexFlag);
-var constCommonMacroForIntegerRegExp = new RegExp(CONSTANTS.MACROS.INTEGER, macroRegexFlag);
-var constCommonMacroForDivRegExp = new RegExp(CONSTANTS.MACROS.DIV, macroRegexFlag);
+const macroRegexFlag = 'g';
+const constCommonMacroForWidthRegExp = new RegExp(CONSTANTS.MACROS.WIDTH, macroRegexFlag);
+const constCommonMacroForHeightRegExp = new RegExp(CONSTANTS.MACROS.HEIGHT, macroRegexFlag);
+const constCommonMacroForAdUnitIDRegExp = new RegExp(CONSTANTS.MACROS.AD_UNIT_ID, macroRegexFlag);
+const constCommonMacroForAdUnitIndexRegExp = new RegExp(CONSTANTS.MACROS.AD_UNIT_INDEX, macroRegexFlag);
+const constCommonMacroForIntegerRegExp = new RegExp(CONSTANTS.MACROS.INTEGER, macroRegexFlag);
+const constCommonMacroForDivRegExp = new RegExp(CONSTANTS.MACROS.DIV, macroRegexFlag);
 
-exports.generateSlotNamesFromPattern = function(activeSlot, pattern, shouldCheckMappingForVideo, videoSlotName) {
-  var slotNames = [];
-  var slotName;
-  var slotNamesObj = {};
-  var sizeArray;
-  var sizeArrayLength;
-  var i
-		;
+export function generateSlotNamesFromPattern(activeSlot, pattern, shouldCheckMappingForVideo, videoSlotName) {
+  const slotNames = [];
+  let slotName;
+  const slotNamesObj = {};
+  let sizeArray;
+  let sizeArrayLength;
+  let i;
   	/* istanbul ignore else */
-  if (this.isObject(activeSlot) && this.isFunction(activeSlot.getSizes)) {
+  if (isObject(activeSlot) && isFunction(activeSlot.getSizes)) {
     sizeArray = activeSlot.getSizes();
-    var divId = this.isFunction(activeSlot.getDivID) ? activeSlot.getDivID() : activeSlot.getSlotId().getDomId();
+    var divId = isFunction(activeSlot.getDivID) ? activeSlot.getDivID() : activeSlot.getSlotId().getDomId();
     if (shouldCheckMappingForVideo) {
       // TODO: remove below line and update above live for assigning sizeArray after remove phantom js and including chromeheadless
       // This adds an size 0x0 to sizes so that multiple kgpvs can be generated
       sizeArray = [].concat(activeSlot.getSizes());
-      var config = this.mediaTypeConfig[divId];
+      const config = mediaTypeConfig[divId];
       if (config && config.video) {
         sizeArray.unshift([0, 0]);
       }
@@ -245,16 +250,16 @@ exports.generateSlotNamesFromPattern = function(activeSlot, pattern, shouldCheck
     if (sizeArrayLength > 0) {
       for (i = 0; i < sizeArrayLength; i++) {
         /* istanbul ignore else */
-        if ((sizeArray[i].length == 2 && (sizeArray[i][0] && sizeArray[i][1]) || (sizeArray[i][0] == 0 && sizeArray[i][1] == 0)) || (this.isFunction(sizeArray[i].getWidth) && this.isFunction(sizeArray[i].getHeight))) {
-          var adUnitId = this.isFunction(activeSlot.getAdUnitID) ? activeSlot.getAdUnitID() : activeSlot.getSlotId().getAdUnitPath();
-          var divId = this.isFunction(activeSlot.getDivID) ? activeSlot.getDivID() : activeSlot.getSlotId().getDomId();
-          var adUnitIndex = this.isFunction(activeSlot.getAdUnitIndex) ? activeSlot.getAdUnitIndex() : activeSlot.getSlotId().getId().split('_')[1];
-          var width = sizeArray[i][0] == 0 ? 0 : sizeArray[i][0] || sizeArray[i].getWidth();
-          var height = sizeArray[i][1] == 0 ? 0 : sizeArray[i][1] || sizeArray[i].getHeight();
+        if ((sizeArray[i].length == 2 && (sizeArray[i][0] && sizeArray[i][1]) || (sizeArray[i][0] == 0 && sizeArray[i][1] == 0)) || (isFunction(sizeArray[i].getWidth) && isFunction(sizeArray[i].getHeight))) {
+          const adUnitId = isFunction(activeSlot.getAdUnitID) ? activeSlot.getAdUnitID() : activeSlot.getSlotId().getAdUnitPath();
+          var divId = isFunction(activeSlot.getDivID) ? activeSlot.getDivID() : activeSlot.getSlotId().getDomId();
+          const adUnitIndex = isFunction(activeSlot.getAdUnitIndex) ? activeSlot.getAdUnitIndex() : activeSlot.getSlotId().getId().split('_')[1];
+          const width = sizeArray[i][0] == 0 ? 0 : sizeArray[i][0] || sizeArray[i].getWidth();
+          const height = sizeArray[i][1] == 0 ? 0 : sizeArray[i][1] || sizeArray[i].getHeight();
           slotName = pattern;
           slotName = slotName.replace(constCommonMacroForAdUnitIDRegExp, adUnitId)
             .replace(constCommonMacroForAdUnitIndexRegExp, adUnitIndex)
-            .replace(constCommonMacroForIntegerRegExp, this.getIncrementalInteger())
+            .replace(constCommonMacroForIntegerRegExp, getIncrementalInteger())
             .replace(constCommonMacroForDivRegExp, divId)
             .replace(constCommonMacroForWidthRegExp, width)
             .replace(constCommonMacroForHeightRegExp, height);
@@ -265,7 +270,7 @@ exports.generateSlotNamesFromPattern = function(activeSlot, pattern, shouldCheck
           if (width == 0 && height == 0) {
             videoSlotName[0] = slotName;
 								  /* istanbul ignore else */
-          } else if (!this.isOwnProperty(slotNamesObj, slotName)) {
+          } else if (!isOwnProperty(slotNamesObj, slotName)) {
             slotNamesObj[slotName] = '';
             slotNames.push(slotName);
           }
@@ -274,7 +279,7 @@ exports.generateSlotNamesFromPattern = function(activeSlot, pattern, shouldCheck
     }
   }
   return slotNames;
-};
+}
 
 /**
  * todo:
@@ -314,36 +319,44 @@ exports.generateSlotNamesFromPattern = function(activeSlot, pattern, shouldCheck
   *     identification in prebid resposne.
   */
 
-exports.forEachGeneratedKey = function(adapterID, adUnits, adapterConfig, impressionID, slotConfigMandatoryParams, activeSlots, handlerFunction, addZeroBids) {
-  var activeSlotsLength = activeSlots.length;
-  var keyGenerationPattern = adapterConfig[CONSTANTS.CONFIG.KEY_GENERATION_PATTERN] || adapterConfig[CONSTANTS.CONFIG.REGEX_KEY_GENERATION_PATTERN] || '';
+export function forEachGeneratedKey(
+  adapterID,
+  adUnits,
+  adapterConfig,
+  impressionID,
+  slotConfigMandatoryParams,
+  activeSlots,
+  handlerFunction,
+  addZeroBids
+) {
+  const activeSlotsLength = activeSlots.length;
+  const keyGenerationPattern = adapterConfig[CONSTANTS.CONFIG.KEY_GENERATION_PATTERN] || adapterConfig[CONSTANTS.CONFIG.REGEX_KEY_GENERATION_PATTERN] || '';
   /* istanbul ignore else */
   if (activeSlotsLength > 0 && keyGenerationPattern.length > 3) {
-    this.forEachOnArray(activeSlots, function(i, activeSlot) {
-      var videoSlotName = [];
+    forEachOnArray(activeSlots, function(i, activeSlot) {
+      const videoSlotName = [];
       // We are passing videoSlotName because we don't want to update the sizes and just check for 0x0 config if video and banner is both enabeld
-      var generatedKeys = this.generateSlotNamesFromPattern(activeSlot, keyGenerationPattern, true, videoSlotName);
+      const generatedKeys = generateSlotNamesFromPattern(activeSlot, keyGenerationPattern, true, videoSlotName);
       if (generatedKeys.length > 0) {
-        this.callHandlerFunctionForMapping(adapterID, adUnits, adapterConfig, impressionID, slotConfigMandatoryParams, generatedKeys, activeSlot, handlerFunction, addZeroBids, keyGenerationPattern, videoSlotName);
+        callHandlerFunctionForMapping(adapterID, adUnits, adapterConfig, impressionID, slotConfigMandatoryParams, generatedKeys, activeSlot, handlerFunction, addZeroBids, keyGenerationPattern, videoSlotName);
       }
     });
   }
-};
+}
 
 // private
 function callHandlerFunctionForMapping(adapterID, adUnits, adapterConfig, impressionID, slotConfigMandatoryParams, generatedKeys, activeSlot, handlerFunction, addZeroBids, keyGenerationPattern, videoSlotName) {
-  var keyLookupMap = adapterConfig[CONSTANTS.CONFIG.KEY_LOOKUP_MAP] || adapterConfig[CONSTANTS.CONFIG.REGEX_KEY_LOOKUP_MAP] || null;
-  var kgpConsistsWidthAndHeight = keyGenerationPattern.indexOf(CONSTANTS.MACROS.WIDTH) >= 0 && keyGenerationPattern.indexOf(CONSTANTS.MACROS.HEIGHT) >= 0;
-  var isRegexMapping = !!adapterConfig[CONSTANTS.CONFIG.REGEX_KEY_LOOKUP_MAP];
-  var regexPattern = undefined;
+  const keyLookupMap = adapterConfig[CONSTANTS.CONFIG.KEY_LOOKUP_MAP] || adapterConfig[CONSTANTS.CONFIG.REGEX_KEY_LOOKUP_MAP] || null;
+  const kgpConsistsWidthAndHeight = keyGenerationPattern.includes(CONSTANTS.MACROS.WIDTH) && keyGenerationPattern.includes(CONSTANTS.MACROS.HEIGHT);
+  const isRegexMapping = !!adapterConfig[CONSTANTS.CONFIG.REGEX_KEY_LOOKUP_MAP];
+  let regexPattern = undefined;
   const adapterNameForAlias = CONFIG.getAdapterNameForAlias(adapterID);
-  var isPubMaticAlias = CONSTANTS.PUBMATIC_ALIASES.indexOf(adapterNameForAlias) > -1;
-  var regExMappingWithNoConfig = false;
-  this.forEachOnArray(generatedKeys, function(j, generatedKey) {
-    var keyConfig = null;
-    var callHandlerFunction = false;
-    var sizeArray = activeSlot.getSizes()
-			;
+  const isPubMaticAlias = CONSTANTS.PUBMATIC_ALIASES.includes(adapterNameForAlias);
+  let regExMappingWithNoConfig = false;
+  forEachOnArray(generatedKeys, function(j, generatedKey) {
+    let keyConfig = null;
+    let callHandlerFunction = false;
+    const sizeArray = activeSlot.getSizes();
 
     if (keyLookupMap == null) {
       // This block executes for pubmatic only where there are no KLM's
@@ -354,9 +367,9 @@ function callHandlerFunctionForMapping(adapterID, adUnits, adapterConfig, impres
       callHandlerFunction = true;
     } else {
       if (isRegexMapping) {
-        this.debugLogIsEnabled && this.log(console.time('Time for regexMatching for key ' + generatedKey));
-        var config = this.getConfigFromRegex(keyLookupMap, generatedKey);
-        this.debugLogIsEnabled && this.log(console.timeEnd('Time for regexMatching for key ' + generatedKey));
+        debugLogIsEnabled && log(console.time(`Time for regexMatching for key ${generatedKey}`));
+        const config = getConfigFromRegex(keyLookupMap, generatedKey);
+        debugLogIsEnabled && log(console.timeEnd(`Time for regexMatching for key ${generatedKey}`));
 
         if (config) {
           keyConfig = config.config;
@@ -372,7 +385,7 @@ function callHandlerFunctionForMapping(adapterID, adUnits, adapterConfig, impres
           // Commented out normal lookup and added below check to remove case sensitive check on videoSlotName[0].
           // keyConfig = keyLookupMap[videoSlotName[0]];
           // keyConfig = keyLookupMap[Object.keys(keyLookupMap).find(key => key.toLowerCase() === videoSlotName[0].toLowerCase())];
-          keyConfig = keyLookupMap[Object.keys(keyLookupMap).filter(function(key) {
+          keyConfig = keyLookupMap[Object.keys(keyLookupMap).filter(key => {
             return key.toLowerCase() === videoSlotName[0].toLowerCase()
           })];
           // We are updating the generatedKey because we want to log kgpv as 0x0 in case of video
@@ -383,7 +396,7 @@ function callHandlerFunctionForMapping(adapterID, adUnits, adapterConfig, impres
         if (!keyConfig) {
           // Commented out normal lookup and added below check to remove case sensitive check on generatedKey.
           // keyConfig = keyLookupMap[generatedKey];
-          keyConfig = keyLookupMap[Object.keys(keyLookupMap).filter(function(key) {
+          keyConfig = keyLookupMap[Object.keys(keyLookupMap).filter(key => {
             return key.toLowerCase() === generatedKey.toLowerCase()
           })];
         }
@@ -393,7 +406,7 @@ function callHandlerFunctionForMapping(adapterID, adUnits, adapterConfig, impres
       // regExMappingWithNoConfig will be true only if klm_rx dosen't return config and partner is PubMatic alias then log message to console
       // with "adapterID+": "+generatedKey+ config not found"
       if ((!keyConfig && !isPubMaticAlias) || regExMappingWithNoConfig) {
-        this.log(adapterID + ': ' + generatedKey + CONSTANTS.MESSAGES.M8);
+        log(`${adapterID}: ${generatedKey}${CONSTANTS.MESSAGES.M8}`);
       } else {
         callHandlerFunction = true;
       }
@@ -403,8 +416,8 @@ function callHandlerFunctionForMapping(adapterID, adUnits, adapterConfig, impres
     if (callHandlerFunction) {
       /* istanbul ignore else */
       if (addZeroBids == true) {
-        var bid = BID.createBid(adapterID, generatedKey);
-        bid.setDefaultBidStatus(1).setReceivedTime(this.getCurrentTimestampInMs());
+        const bid = BID.createBid(adapterID, generatedKey);
+        bid.setDefaultBidStatus(1).setReceivedTime(getCurrentTimestampInMs());
         bidManager.setBidFromBidder(activeSlot.getDivID(), bid);
         bid.setRegexPattern(regexPattern);
       }
@@ -416,7 +429,7 @@ function callHandlerFunctionForMapping(adapterID, adUnits, adapterConfig, impres
         generatedKey,
         kgpConsistsWidthAndHeight,
         activeSlot,
-        this.getPartnerParams(keyConfig),
+        getPartnerParams(keyConfig),
         sizeArray[j][0],
         sizeArray[j][1],
         regexPattern
@@ -424,150 +437,148 @@ function callHandlerFunctionForMapping(adapterID, adUnits, adapterConfig, impres
     }
   });
 }
+
 /* start-test-block */
-exports.callHandlerFunctionForMapping = callHandlerFunctionForMapping;
+export {callHandlerFunctionForMapping};
+
 /* end-test-block */
 
 // removeIf(removeLegacyAnalyticsRelatedCode)
-exports.resizeWindow = function(theDocument, width, height, divId) {
+export function resizeWindow({defaultView}, width, height, divId) {
   /* istanbul ignore else */
   if (height && width) {
     try {
-      var defaultViewFrame = theDocument.defaultView.frameElement;
-      var elementArray = [];
+      let defaultViewFrame = defaultView.frameElement;
+      const elementArray = [];
       if (divId) {
-        var adSlot = document.getElementById(divId);
-        var adSlot_Div = adSlot.querySelector('div');
+        const adSlot = document.getElementById(divId);
+        const adSlot_Div = adSlot.querySelector('div');
         elementArray.push(adSlot_Div);
         elementArray.push(adSlot_Div.querySelector('iframe'));
         defaultViewFrame = adSlot.querySelector('iframe');
       }
       elementArray.push(defaultViewFrame);
-      elementArray.forEach(function(ele) {
+      elementArray.forEach(ele => {
         if (ele) {
-          ele.width = '' + width;
-          ele.height = '' + height;
-          ele.style.width = '' + width + 'px';
-          ele.style.height = '' + height + 'px';
+          ele.width = `${width}`;
+          ele.height = `${height}`;
+          ele.style.width = `${width}px`;
+          ele.style.height = `${height}px`;
         }
       });
     } catch (e) {
-      this.logError('Creative-Resize; Error in resizing creative');
+      logError('Creative-Resize; Error in resizing creative');
     } // eslint-disable-line no-empty
   }
-};
+}
+
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
 // removeIf(removeLegacyAnalyticsRelatedCode)
-exports.writeIframe = function(theDocument, src, width, height, style) {
-  theDocument.write('<iframe' +
-    ' frameborder="0" allowtransparency="true" marginheight="0" marginwidth="0" scrolling="no" width="' +
-    width + '" hspace="0" vspace="0" height="' +
-    height + '"' +
-    (style ? ' style="' + style + '"' : '') +
-    ' src="' + src + '"' +
-    '></ifr' + 'ame>');
-};
+export function writeIframe(theDocument, src, width, height, style) {
+  theDocument.write(`<iframe frameborder="0" allowtransparency="true" marginheight="0" marginwidth="0" scrolling="no" width="${width}" hspace="0" vspace="0" height="${height}"${style ? ` style="${style}"` : ''} src="${src}"></iframe>`);
+}
+
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
 // removeIf(removeLegacyAnalyticsRelatedCode)
-exports.displayCreative = function(theDocument, bid) {
-  if (bid && bid.pbbid && bid.pbbid.mediaType == 'video' && bid.renderer && this.isObject(bid.renderer)) {
-    if (this.isFunction(bid.renderer.render)) {
+export function displayCreative(theDocument, bid) {
+  if (bid && bid.pbbid && bid.pbbid.mediaType == 'video' && bid.renderer && isObject(bid.renderer)) {
+    if (isFunction(bid.renderer.render)) {
       bid.renderer.render(bid.getPbBid());
     }
   } else {
-    this.resizeWindow(theDocument, bid.width, bid.height);
+    resizeWindow(theDocument, bid.width, bid.height);
     if (bid.adHtml) {
-      bid.adHtml = this.replaceAuctionPrice(bid.adHtml, bid.getGrossEcpm());
+      bid.adHtml = replaceAuctionPrice(bid.adHtml, bid.getGrossEcpm());
       theDocument.write(bid.adHtml);
     } else if (bid.adUrl) {
-      bid.adUrl = this.replaceAuctionPrice(bid.adUrl, bid.getGrossEcpm());
-      this.writeIframe(theDocument, bid.adUrl, bid.width, bid.height, '');
+      bid.adUrl = replaceAuctionPrice(bid.adUrl, bid.getGrossEcpm());
+      writeIframe(theDocument, bid.adUrl, bid.width, bid.height, '');
     } else {
-      this.logError('creative details are not found');
-      this.logError(bid);
+      logError('creative details are not found');
+      logError(bid);
     }
   }
-};
+}
+
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
 // todo: how about accepting array of arguments to be passed to callback function after key, value, arrayOfArguments
-exports.forEachOnObject = function(theObject, callback) {
+export function forEachOnObject(theObject, callback) {
   /* istanbul ignore else */
-  if (!this.isObject(theObject)) {
+  if (!isObject(theObject)) {
     return;
   }
 
   /* istanbul ignore else */
-  if (!this.isFunction(callback)) {
+  if (!isFunction(callback)) {
     return;
   }
 
-  for (var key in theObject) {
+  for (const key in theObject) {
     /* istanbul ignore else */
-    if (this.isOwnProperty(theObject, key)) {
+    if (isOwnProperty(theObject, key)) {
       callback(key, theObject[key]);
     }
   }
-};
+}
 
-exports.forEachOnArray = function(theArray, callback) {
+export function forEachOnArray(theArray, callback) {
   /* istanbul ignore else */
-  if (!this.isArray(theArray)) {
+  if (!isArray(theArray)) {
     return;
   }
 
   /* istanbul ignore else */
-  if (!this.isFunction(callback)) {
+  if (!isFunction(callback)) {
     return;
   }
 
-  for (var index = 0, arrayLength = theArray.length; index < arrayLength; index++) {
+  for (let index = 0, arrayLength = theArray.length; index < arrayLength; index++) {
     callback(index, theArray[index]);
   }
-};
+}
 
-exports.trim = function(s) {
-  if (!this.isString(s)) {
+export function trim(s) {
+  if (!isString(s)) {
     return s;
   } else {
     return s.replace(/^\s+/g, '').replace(/\s+$/g, '');
   }
-};
+}
 
-exports.getTopFrameOfSameDomain = function(cWin) {
+export function getTopFrameOfSameDomain(cWin) {
   try {
     /* istanbul ignore else */
     if (cWin.parent.document != cWin.document) {
-		  return this.getTopFrameOfSameDomain(cWin.parent);
+		  return getTopFrameOfSameDomain(cWin.parent);
     }
   } catch (e) {}
   return cWin;
-};
+}
 
-exports.metaInfo = {};
+export const metaInfo = {};
 
-exports.getMetaInfo = function(cWin) {
-  var obj = {};
-		 var MAX_PAGE_URL_LEN = 512;
-		 var frame
-		;
+export function getMetaInfo(cWin) {
+  const obj = {};
+		 const MAX_PAGE_URL_LEN = 512;
+		 let frame;
 
   obj.pageURL = '';
   obj.refURL = '';
   obj.protocol = 'https://';
   obj.secure = 1;
-  obj.isInIframe = this.isIframe(cWin);
+  obj.isInIframe = isIframe(cWin);
 
   try {
-    frame = this.getTopFrameOfSameDomain(cWin);
+    frame = getTopFrameOfSameDomain(cWin);
     obj.refURL = (frame.refurl || frame.document.referrer || '').substr(0, MAX_PAGE_URL_LEN);
     obj.pageURL = (frame !== window.top && frame.document.referrer != '' ? frame.document.referrer : frame.location.href).substr(0, MAX_PAGE_URL_LEN);
 
-    obj.protocol = (function(frame) {
+    obj.protocol = (({location}) => {
       /* istanbul ignore else */
-      if (frame.location.protocol === 'http:') {
+      if (location.protocol === 'http:') {
         obj.secure = 0;
         return 'http://';
       }
@@ -576,78 +587,77 @@ exports.getMetaInfo = function(cWin) {
     })(frame);
   } catch (e) {}
 
-  obj.pageDomain = this.getDomainFromURL(obj.pageURL);
+  obj.pageDomain = getDomainFromURL(obj.pageURL);
 
-  this.metaInfo = obj;
+  metaInfo = obj;
 
   return obj;
-};
+}
 
-exports.isIframe = function(theWindow) {
+export function isIframe({self, top}) {
   try {
-    return theWindow.self !== theWindow.top;
+    return self !== top;
   } catch (e) {
     return false;
   }
-};
+}
 
-exports.findQueryParamInURL = function(url, name) {
-  return this.isOwnProperty(this.parseQueryParams(url), name);
-};
+export function findQueryParamInURL(url, name) {
+  return isOwnProperty(parseQueryParams(url), name);
+}
 
-exports.parseQueryParams = function(url) {
-  var parser = this.createDocElement(window, 'a');
+export function parseQueryParams(url) {
+  const parser = createDocElement(window, 'a');
   parser.href = url;
-  var params = {};
+  const params = {};
 
   /* istanbul ignore else */
   if (parser.search) {
-    var queryString = parser.search.replace('?', '');
+    let queryString = parser.search.replace('?', '');
     queryString = queryString.split('&');
-    this.forEachOnArray(queryString, function(index, keyValue) {
+    forEachOnArray(queryString, (index, keyValue) => {
       var keyValue = keyValue.split('=');
-      var key = keyValue[0] || '';
-      var value = keyValue[1] || '';
+      const key = keyValue[0] || '';
+      const value = keyValue[1] || '';
       params[key] = value;
     });
   }
 
   return params;
-};
+}
 
-exports.createDocElement = function(win, elementName) {
+export function createDocElement(win, elementName) {
   return win.document.createElement(elementName);
-};
+}
 
-exports.addHookOnFunction = function(theObject, useProto, functionName, newFunction) {
-  var callMethodOn = theObject;
+export function addHookOnFunction(theObject, useProto, functionName, newFunction) {
+  const callMethodOn = theObject;
   theObject = useProto ? theObject.__proto__ : theObject;
-  if (this.isObject(theObject) && this.isFunction(theObject[functionName])) {
-    var originalFunction = theObject[functionName];
+  if (isObject(theObject) && isFunction(theObject[functionName])) {
+    const originalFunction = theObject[functionName];
     theObject[functionName] = newFunction(callMethodOn, originalFunction);
   } else {
-    this.logWarning('in assignNewDefination: oldReference is not a function');
+    logWarning('in assignNewDefination: oldReference is not a function');
   }
-};
+}
 
-exports.getBididForPMP = function(values, priorityArray) {
+export function getBididForPMP(values, priorityArray) {
   values = values.split(',');
 
-  var valuesLength = values.length;
-  var priorityArrayLength = priorityArray.length;
-  var selectedPMPDeal = '';
-  var bidID = ''
-		;
+  const valuesLength = values.length;
+  const priorityArrayLength = priorityArray.length;
+  let selectedPMPDeal = '';
+  let bidID = '';
 
   /* istanbul ignore else */
   if (valuesLength == 0) {
-    this.log('Error: Unable to find bidID as values array is empty.');
+    log('Error: Unable to find bidID as values array is empty.');
     return;
   }
 
-  for (var i = 0; i < priorityArrayLength; i++) {
-    for (var j = 0; j < valuesLength; j++) {
-      if (values[j].indexOf(priorityArray[i]) >= 0) {
+  for (let i = 0; i < priorityArrayLength; i++) {
+    for (let j = 0; j < valuesLength; j++) {
+      if (values[j].includes(priorityArray[i])) {
         selectedPMPDeal = values[j];
         break;
       }
@@ -661,12 +671,12 @@ exports.getBididForPMP = function(values, priorityArray) {
 
   if (selectedPMPDeal == '') {
     selectedPMPDeal = values[0];
-    this.log('No PMP-Deal was found matching PriorityArray, So Selecting first PMP-Deal: ' + selectedPMPDeal);
+    log(`No PMP-Deal was found matching PriorityArray, So Selecting first PMP-Deal: ${selectedPMPDeal}`);
   } else {
-    this.log('Selecting PMP-Deal: ' + selectedPMPDeal);
+    log(`Selecting PMP-Deal: ${selectedPMPDeal}`);
   }
 
-  var temp = selectedPMPDeal.split(CONSTANTS.COMMON.DEAL_KEY_VALUE_SEPARATOR);
+  const temp = selectedPMPDeal.split(CONSTANTS.COMMON.DEAL_KEY_VALUE_SEPARATOR);
   /* istanbul ignore else */
   if (temp.length == 3) {
     bidID = temp[2];
@@ -674,16 +684,15 @@ exports.getBididForPMP = function(values, priorityArray) {
 
   /* istanbul ignore else */
   if (!bidID) {
-    this.log('Error: bidID not found in PMP-Deal: ' + selectedPMPDeal);
+    log(`Error: bidID not found in PMP-Deal: ${selectedPMPDeal}`);
     return;
   }
 
   return bidID;
-};
+}
 
-function insertElement(elm, doc, target, asLastChildChild) {
-  doc = doc || document;
-  var parentEl;
+function insertElement(elm, doc = document, target, asLastChildChild) {
+  let parentEl;
   if (target) {
 	  parentEl = doc.getElementsByTagName(target);
   } else {
@@ -693,19 +702,19 @@ function insertElement(elm, doc, target, asLastChildChild) {
 	  parentEl = parentEl.length ? parentEl : doc.getElementsByTagName('body');
 	  if (parentEl.length) {
       parentEl = parentEl[0];
-      var insertBeforeEl = asLastChildChild ? null : parentEl.firstChild;
+      const insertBeforeEl = asLastChildChild ? null : parentEl.firstChild;
       return parentEl.insertBefore(elm, insertBeforeEl);
 	  }
   } catch (e) {}
 }
 
-exports.insertHtmlIntoIframe = function(htmlCode) {
+export function insertHtmlIntoIframe(htmlCode) {
   if (!htmlCode) {
 	  return;
   }
 
-  var iframe = document.createElement('iframe');
-  iframe.id = this.getUniqueIdentifierStr();
+  const iframe = document.createElement('iframe');
+  iframe.id = getUniqueIdentifierStr();
   iframe.width = 0;
   iframe.height = 0;
   iframe.hspace = '0';
@@ -727,9 +736,9 @@ exports.insertHtmlIntoIframe = function(htmlCode) {
 }
 
 // removeIf(removeNativeRelatedCode)
-exports.createInvisibleIframe = function() {
-  var f = this.createDocElement(window, 'iframe');
-  f.id = this.getUniqueIdentifierStr();
+export function createInvisibleIframe() {
+  const f = createDocElement(window, 'iframe');
+  f.id = getUniqueIdentifierStr();
   f.height = 0;
   f.width = 0;
   f.border = '0px';
@@ -744,13 +753,14 @@ exports.createInvisibleIframe = function() {
   f.style = 'display:none';
   return f;
 }
+
 // endRemoveIf(removeNativeRelatedCode)
 
 // removeIf(removeLegacyAnalyticsRelatedCode)
-exports.addMessageEventListener = function(theWindow, eventHandler) {
+export function addMessageEventListener(theWindow, eventHandler) {
   /* istanbul ignore else */
   if (typeof eventHandler !== 'function') {
-    this.log('EventHandler should be a function');
+    log('EventHandler should be a function');
     return false;
   }
 
@@ -760,13 +770,14 @@ exports.addMessageEventListener = function(theWindow, eventHandler) {
     theWindow.attachEvent('onmessage', eventHandler);
   }
   return true;
-};
+}
+
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
 // removeIf(removeLegacyAnalyticsRelatedCode)
-exports.safeFrameCommunicationProtocol = function(msg) {
+export function safeFrameCommunicationProtocol(msg) {
   try {
-    var bidSlotId;
+    let bidSlotId;
     msgData = window.JSON.parse(msg.data);
     /* istanbul ignore else */
     if (!msgData.pwt_type) {
@@ -786,19 +797,19 @@ exports.safeFrameCommunicationProtocol = function(msg) {
           var theBid = bidDetails.bid;
           var	adapterID = theBid.getAdapterID();
           var divID = bidDetails.slotid;
-          var newMsgData = {
+          const newMsgData = {
             pwt_type: 2,
             pwt_bid: theBid
           };
-          this.vLogInfo(divID, {type: 'disp', adapter: adapterID});
+          vLogInfo(divID, {type: 'disp', adapter: adapterID});
           bidManager.executeMonetizationPixel(divID, theBid);
           // outstream video renderer for safe frame.
-          if (theBid && theBid.pbbid && theBid.pbbid.mediaType == 'video' && theBid.renderer && this.isObject(theBid.renderer)) {
-            if (this.isFunction(theBid.renderer.render)) {
+          if (theBid && theBid.pbbid && theBid.pbbid.mediaType == 'video' && theBid.renderer && isObject(theBid.renderer)) {
+            if (isFunction(theBid.renderer.render)) {
               theBid.renderer.render(theBid.getPbBid());
             }
           } else {
-            this.resizeWindow(window.document, theBid.width, theBid.height, divID);
+            resizeWindow(window.document, theBid.width, theBid.height, divID);
             msg.source.postMessage(window.JSON.stringify(newMsgData), msgData.pwt_origin);
           }
         }
@@ -815,7 +826,7 @@ exports.safeFrameCommunicationProtocol = function(msg) {
           var theBid = msgData.pwt_bid;
           if (theBid.adHtml) {
             try {
-              var iframe = this.createInvisibleIframe(window.document);
+              const iframe = createInvisibleIframe(window.document);
               /* istanbul ignore else */
               if (!iframe) {
                 throw {message: 'Failed to create invisible frame.', name: ''};
@@ -832,13 +843,13 @@ exports.safeFrameCommunicationProtocol = function(msg) {
                 throw {message: 'Unable to access frame window.', name: ''};
               }
 
-              var iframeDoc = iframe.contentWindow.document;
+              const iframeDoc = iframe.contentWindow.document;
               /* istanbul ignore else */
               if (!iframeDoc) {
                 throw {message: 'Unable to access frame window document.', name: ''};
               }
 
-              var content = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"><html><head><base target="_top" /><scr' + 'ipt>inDapIF=true;</scr' + 'ipt></head>';
+              let content = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"><html><head><base target="_top" /><scr' + 'ipt>inDapIF=true;</scr' + 'ipt></head>';
               content += '<body>';
               content += '<script>var $sf = window.parent.$sf;<\/script>';
               content += '<script>setInterval(function(){try{var fr = window.document.defaultView.frameElement;fr.width = window.parent.document.defaultView.innerWidth;fr.height = window.parent.document.defaultView.innerHeight;}catch(e){}}, 200);</script>';
@@ -848,16 +859,16 @@ exports.safeFrameCommunicationProtocol = function(msg) {
               iframeDoc.write(content);
               iframeDoc.close();
             } catch (e) {
-              this.logError('Error in rendering creative in safe frame.');
-              this.log(e);
-              this.log('Rendering synchronously.');
-              this.displayCreative(window.document, msgData.pwt_bid);
+              logError('Error in rendering creative in safe frame.');
+              log(e);
+              log('Rendering synchronously.');
+              displayCreative(window.document, msgData.pwt_bid);
             }
           } else if (theBid.adUrl) {
-            this.writeIframe(window.document, theBid.adUrl, theBid.width, theBid.height, '');
+            writeIframe(window.document, theBid.adUrl, theBid.width, theBid.height, '');
           } else {
-            this.logWarning('creative details are not found');
-            this.log(theBid);
+            logWarning('creative details are not found');
+            log(theBid);
           }
         }
         break;
@@ -874,7 +885,7 @@ exports.safeFrameCommunicationProtocol = function(msg) {
             var theBid = bidDetails.bid;
             var adapterID = theBid.getAdapterID();
             var divID = bidDetails.slotid;
-            this.vLogInfo(divID, {type: 'disp', adapter: adapterID});
+            vLogInfo(divID, {type: 'disp', adapter: adapterID});
             if (msgData.pwt_action && msgData.pwt_action == 'imptrackers') {
               bidManager.executeMonetizationPixel(divID, theBid);
             }
@@ -886,29 +897,30 @@ exports.safeFrameCommunicationProtocol = function(msg) {
     }
 
     // Check if browsers local storage has auction related data and update impression served count accordingly.
-	    var frequencyDepth = JSON.parse(localStorage.getItem('PROFILE_AUCTION_INFO_' + window.location.hostname)) || {};
+	    const frequencyDepth = JSON.parse(localStorage.getItem(`PROFILE_AUCTION_INFO_${window.location.hostname}`)) || {};
     if (frequencyDepth !== null && frequencyDepth.slotLevelFrquencyDepth) {
       frequencyDepth.slotLevelFrquencyDepth[frequencyDepth.codeAdUnitMap[bidSlotId && bidSlotId.slotid]].impressionServed = frequencyDepth.slotLevelFrquencyDepth[frequencyDepth.codeAdUnitMap[bidSlotId && bidSlotId.slotid]].impressionServed + 1;
       frequencyDepth.impressionServed = frequencyDepth.impressionServed + 1;
     }
-    localStorage.setItem('PROFILE_AUCTION_INFO_' + window.location.hostname, JSON.stringify(frequencyDepth));
+    localStorage.setItem(`PROFILE_AUCTION_INFO_${window.location.hostname}`, JSON.stringify(frequencyDepth));
   } catch (e) {}
-};
+}
+
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
 // removeIf(removeLegacyAnalyticsRelatedCode)
-exports.addMessageEventListenerForSafeFrame = function(theWindow) {
-  this.addMessageEventListener(theWindow, this.safeFrameCommunicationProtocol);
-};
+export function addMessageEventListenerForSafeFrame(theWindow) {
+  addMessageEventListener(theWindow, safeFrameCommunicationProtocol);
+}
+
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
-exports.getElementLocation = function(el) {
-  var rect;
-  var x = 0;
-  var y = 0
-		;
+export function getElementLocation(el) {
+  let rect;
+  let x = 0;
+  let y = 0;
 
-  if (this.isFunction(el.getBoundingClientRect)) {
+  if (isFunction(el.getBoundingClientRect)) {
     rect = el.getBoundingClientRect();
     x 	 = Math.floor(rect.left);
     y 	 = Math.floor(rect.top);
@@ -919,42 +931,41 @@ exports.getElementLocation = function(el) {
       el = el.offsetParent;
     }
   }
-  return { x: x, y: y	};
+  return { x, y	};
 }
 
-exports.createVLogInfoPanel = function(divID, dimensionArray) {
-  var element;
-  var infoPanelElement;
-  var infoPanelElementID;
-  var doc = window.document
-		;
+export function createVLogInfoPanel(divID, dimensionArray) {
+  let element;
+  let infoPanelElement;
+  let infoPanelElementID;
+  const doc = window.document;
 
   /* istanbul ignore else */
-  if (this.visualDebugLogIsEnabled) {
+  if (visualDebugLogIsEnabled) {
     element = doc.getElementById(divID);
     /* istanbul ignore else */
     if (element && dimensionArray.length && dimensionArray[0][0] && dimensionArray[0][1]) {
-      infoPanelElementID = divID + '-pwtc-info';
+      infoPanelElementID = `${divID}-pwtc-info`;
       /* istanbul ignore else */
-      if (!this.isUndefined(doc.getElementById(infoPanelElementID))) {
-        var pos = this.getElementLocation(element);
+      if (!isUndefined(doc.getElementById(infoPanelElementID))) {
+        const pos = getElementLocation(element);
         infoPanelElement = doc.createElement('div');
         infoPanelElement.id = infoPanelElementID;
-        infoPanelElement.style = 'position: absolute; /*top: ' + pos.y + 'px;*/ left: ' + pos.x + 'px; width: ' + dimensionArray[0][0] + 'px; height: ' + dimensionArray[0][1] + 'px; border: 1px solid rgb(255, 204, 52); padding-left: 11px; background: rgb(247, 248, 224) none repeat scroll 0% 0%; overflow: auto; z-index: 9999997; visibility: hidden;opacity:0.9;font-size:13px;font-family:monospace;';
+        infoPanelElement.style = `position: absolute; /*top: ${pos.y}px;*/ left: ${pos.x}px; width: ${dimensionArray[0][0]}px; height: ${dimensionArray[0][1]}px; border: 1px solid rgb(255, 204, 52); padding-left: 11px; background: rgb(247, 248, 224) none repeat scroll 0% 0%; overflow: auto; z-index: 9999997; visibility: hidden;opacity:0.9;font-size:13px;font-family:monospace;`;
 
-        var closeImage = doc.createElement('img');
-        closeImage.src = this.metaInfo.protocol + 'ads.pubmatic.com/AdServer/js/pwt/close.png';
-        closeImage.style = 'cursor:pointer; position: absolute; top: 2px; left: ' + (pos.x + dimensionArray[0][0] - 16 - 15) + 'px; z-index: 9999998;';
+        const closeImage = doc.createElement('img');
+        closeImage.src = `${metaInfo.protocol}ads.pubmatic.com/AdServer/js/pwt/close.png`;
+        closeImage.style = `cursor:pointer; position: absolute; top: 2px; left: ${pos.x + dimensionArray[0][0] - 16 - 15}px; z-index: 9999998;`;
         closeImage.title = 'close';
-        closeImage.onclick = function() {
+        closeImage.onclick = () => {
           infoPanelElement.style.display = 'none';
         };
         infoPanelElement.appendChild(closeImage);
         infoPanelElement.appendChild(doc.createElement('br'));
 
-        var text = 'Slot: ' + divID + ' | ';
-        for (var i = 0; i < dimensionArray.length; i++) {
-          text += (i != 0 ? ', ' : '') + dimensionArray[i][0] + 'x' + dimensionArray[i][1];
+        let text = `Slot: ${divID} | `;
+        for (let i = 0; i < dimensionArray.length; i++) {
+          text += `${(i != 0 ? ', ' : '') + dimensionArray[i][0]}x${dimensionArray[i][1]}`;
         }
         infoPanelElement.appendChild(doc.createTextNode(text));
         infoPanelElement.appendChild(doc.createElement('br'));
@@ -962,47 +973,45 @@ exports.createVLogInfoPanel = function(divID, dimensionArray) {
       }
     }
   }
-};
+}
 
-exports.realignVLogInfoPanel = function(divID) {
-  var element;
-  var infoPanelElement;
-  var infoPanelElementID;
-  var doc = window.document
-		;
+export function realignVLogInfoPanel(divID) {
+  let element;
+  let infoPanelElement;
+  let infoPanelElementID;
+  const doc = window.document;
 
   /* istanbul ignore else */
-  if (this.visualDebugLogIsEnabled) {
+  if (visualDebugLogIsEnabled) {
     element = doc.getElementById(divID);
     /* istanbul ignore else */
     if (element) {
-      infoPanelElementID = divID + '-pwtc-info';
+      infoPanelElementID = `${divID}-pwtc-info`;
       infoPanelElement = doc.getElementById(infoPanelElementID);
       /* istanbul ignore else */
       if (infoPanelElement) {
-        var pos = this.getElementLocation(element);
+        const pos = getElementLocation(element);
         infoPanelElement.style.visibility = 'visible';
-        infoPanelElement.style.left = pos.x + 'px';
-        infoPanelElement.style.height = element.clientHeight + 'px';
+        infoPanelElement.style.left = `${pos.x}px`;
+        infoPanelElement.style.height = `${element.clientHeight}px`;
       }
     }
   }
-};
+}
 
-exports.vLogInfo = function(divID, infoObject) {
-  var infoPanelElement;
-  var message;
-  var doc = window.document
-		;
+export function vLogInfo(divID, infoObject) {
+  let infoPanelElement;
+  let message;
+  const doc = window.document;
   /* istanbul ignore else */
-  if (this.visualDebugLogIsEnabled) {
-    var infoPanelElementID = divID + '-pwtc-info';
+  if (visualDebugLogIsEnabled) {
+    const infoPanelElementID = `${divID}-pwtc-info`;
     infoPanelElement = doc.getElementById(infoPanelElementID);
     /* istanbul ignore else */
     if (infoPanelElement) {
       switch (infoObject.type) {
         case 'bid':
-          var latency = infoObject.latency;
+          let latency = infoObject.latency;
           var bidDetails = infoObject.bidDetails;
           var currencyMsg = '';
           /* istanbul ignore else */
@@ -1018,7 +1027,7 @@ exports.vLogInfo = function(divID, infoObject) {
           } else {
             currencyMsg = 'USD';
           }
-          message = 'Bid: ' + infoObject.bidder + (infoObject.s2s ? '(s2s)' : '') + ': ' + bidDetails.getNetEcpm() + '(' + bidDetails.getGrossEcpm() + ')' + currencyMsg + ' :' + latency + 'ms';
+          message = `Bid: ${infoObject.bidder}${infoObject.s2s ? '(s2s)' : ''}: ${bidDetails.getNetEcpm()}(${bidDetails.getGrossEcpm()})${currencyMsg} :${latency}ms`;
           /* istanbul ignore else */
           if (bidDetails.getPostTimeoutStatus()) {
             message += ': POST-TIMEOUT';
@@ -1037,7 +1046,7 @@ exports.vLogInfo = function(divID, infoObject) {
           } else {
             currencyMsg = 'USD';
           }
-          message = 'Winning Bid: ' + bidDetails.getAdapterID() + ': ' + bidDetails.getNetEcpm() + currencyMsg;
+          message = `Winning Bid: ${bidDetails.getAdapterID()}: ${bidDetails.getNetEcpm()}${currencyMsg}`;
           break;
 
         case 'win-bid-fail':
@@ -1049,58 +1058,57 @@ exports.vLogInfo = function(divID, infoObject) {
           break;
 
         case 'disp':
-          message = 'Displaying creative from ' + infoObject.adapter;
+          message = `Displaying creative from ${infoObject.adapter}`;
           break;
       }
       infoPanelElement.appendChild(doc.createTextNode(message));
       infoPanelElement.appendChild(doc.createElement('br'));
     }
   }
-};
+}
 
-exports.getExternalBidderStatus = function(divIds) {
-  var status = true;
-  this.forEachOnArray(divIds, function (key, divId) {
+export function getExternalBidderStatus(divIds) {
+  let status = true;
+  forEachOnArray(divIds, (key, divId) => {
     status = window.OWT.externalBidderStatuses[divId]
       ? status && window.OWT.externalBidderStatuses[divId].status
       : status;
   });
   return status;
-};
+}
 
-exports.resetExternalBidderStatus = function(divIds) {
-  this.forEachOnArray(divIds, function (key, divId) {
-    this.log('resetExternalBidderStatus: ' + divId);
+export function resetExternalBidderStatus(divIds) {
+  forEachOnArray(divIds, function (key, divId) {
+    log(`resetExternalBidderStatus: ${divId}`);
     window.OWT.externalBidderStatuses[divId] = undefined;
   });
-};
+}
 
 // removeIf(removeLegacyAnalyticsRelatedCode)
-exports.ajaxRequest = function(url, callback, data, options) {
+export function ajaxRequest(url, callback, data, options) {
   try {
     options = options || {};
 
-    var x;
-    var XHR_DONE = 4;
-    var ajaxSupport = true;
-    var method = options.method || (data ? 'POST' : 'GET')
-			;
+    let x;
+    const XHR_DONE = 4;
+    let ajaxSupport = true;
+    const method = options.method || (data ? 'POST' : 'GET');
 
     if (!window.XMLHttpRequest) {
       ajaxSupport = false;
     } else {
       x = new window.XMLHttpRequest();
-      if (this.isUndefined(x.responseType)) {
+      if (isUndefined(x.responseType)) {
         ajaxSupport = false;
       }
     }
 
     if (!ajaxSupport) {
-      this.log('Ajax is not supported');
+      log('Ajax is not supported');
       return;
     }
 
-    x.onreadystatechange = function () {
+    x.onreadystatechange = () => {
       if (x.readyState === XHR_DONE && callback) {
         callback(x.responseText, x);
       }
@@ -1119,17 +1127,18 @@ exports.ajaxRequest = function(url, callback, data, options) {
     x.setRequestHeader('Content-Type', options.contentType || 'text/plain');
     x.send(method === 'POST' && data);
   } catch (error) {
-    this.log('Failed in Ajax');
-    this.log(error);
+    log('Failed in Ajax');
+    log(error);
   }
-};
+}
+
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
 // Returns mediaTypes for adUnits which are sent to prebid
-exports.getAdUnitConfig = function(sizes, currentSlot) {
+export function getAdUnitConfig(sizes, currentSlot) {
   function iskgpvpresent() {
     if (kgpv) {
-      return Object.keys(slotConfig['config']).toString().toLowerCase().indexOf(kgpv.toLowerCase()) > -1;
+      return Object.keys(slotConfig['config']).toString().toLowerCase().includes(kgpv.toLowerCase());
     }
   }
   // checks if regex is present and enabled
@@ -1138,8 +1147,8 @@ exports.getAdUnitConfig = function(sizes, currentSlot) {
   }
   // Returns regex-matched config for kgpv, if not found returns undefined
   function isAdunitRegex() {
-    var regexKeys = Object.keys(slotConfig['config']);
-    var matchedRegex;
+    const regexKeys = Object.keys(slotConfig['config']);
+    let matchedRegex;
     regexKeys.forEach(function (exp) {
       try {
         // Ignores "default" key and RegExp performs case insensitive check
@@ -1148,7 +1157,7 @@ exports.getAdUnitConfig = function(sizes, currentSlot) {
           return;
         }
       } catch (ex) {
-        this.log(CONSTANTS.MESSAGES.M32 + JSON.stringify(exp));
+        log(CONSTANTS.MESSAGES.M32 + JSON.stringify(exp));
       }
     })
     if (matchedRegex) {
@@ -1167,40 +1176,40 @@ exports.getAdUnitConfig = function(sizes, currentSlot) {
     }
   }
 
-  var adUnitConfig = {};
-  var mediaTypeObject = {};
+  const adUnitConfig = {};
+  const mediaTypeObject = {};
   var slotConfig = CONFIG.getSlotConfiguration();
   if (slotConfig) {
     if ((slotConfig.configPattern && slotConfig.configPattern.trim() != '') || (slotConfig['configPattern'] = '_AU_')) {
-      var kgp = slotConfig.configPattern;
-      var isVideo = true;
-      var isNative = true;
-      var isBanner = true;
-      var config = undefined;
-      var divId = this.isFunction(currentSlot.getDivID) ? currentSlot.getDivID() : currentSlot.getSlotId().getDomId();
+      const kgp = slotConfig.configPattern;
+      let isVideo = true;
+      let isNative = true;
+      let isBanner = true;
+      let config = undefined;
+      var divId = isFunction(currentSlot.getDivID) ? currentSlot.getDivID() : currentSlot.getSlotId().getDomId();
 
       // TODO: Have to write logic if required in near future to support multiple kgpvs, right now
       // as we are only supporting div and ad unit, taking the first slot name.
       // Implemented as per code review and discussion.
 
-      var kgpv = this.generateSlotNamesFromPattern(currentSlot, kgp, false)[0];
+      var kgpv = generateSlotNamesFromPattern(currentSlot, kgp, false)[0];
       // Global Default Enable is false then disable each
-      if (this.isOwnProperty(slotConfig['config'], CONSTANTS.COMMON.DEFAULT)) {
-        if (slotConfig['config'][CONSTANTS.COMMON.DEFAULT].banner && this.isOwnProperty(slotConfig['config'][CONSTANTS.COMMON.DEFAULT].banner, 'enabled') && !slotConfig['config'][CONSTANTS.COMMON.DEFAULT].banner.enabled) {
+      if (isOwnProperty(slotConfig['config'], CONSTANTS.COMMON.DEFAULT)) {
+        if (slotConfig['config'][CONSTANTS.COMMON.DEFAULT].banner && isOwnProperty(slotConfig['config'][CONSTANTS.COMMON.DEFAULT].banner, 'enabled') && !slotConfig['config'][CONSTANTS.COMMON.DEFAULT].banner.enabled) {
           isBanner = false;
         }
-        if (slotConfig['config'][CONSTANTS.COMMON.DEFAULT].native && this.isOwnProperty(slotConfig['config'][CONSTANTS.COMMON.DEFAULT].native, 'enabled') && !slotConfig['config'][CONSTANTS.COMMON.DEFAULT].native.enabled) {
+        if (slotConfig['config'][CONSTANTS.COMMON.DEFAULT].native && isOwnProperty(slotConfig['config'][CONSTANTS.COMMON.DEFAULT].native, 'enabled') && !slotConfig['config'][CONSTANTS.COMMON.DEFAULT].native.enabled) {
           isNative = false;
         }
-        if (slotConfig['config'][CONSTANTS.COMMON.DEFAULT].video && this.isOwnProperty(slotConfig['config'][CONSTANTS.COMMON.DEFAULT].video, 'enabled') && !slotConfig['config'][CONSTANTS.COMMON.DEFAULT].video.enabled) {
+        if (slotConfig['config'][CONSTANTS.COMMON.DEFAULT].video && isOwnProperty(slotConfig['config'][CONSTANTS.COMMON.DEFAULT].video, 'enabled') && !slotConfig['config'][CONSTANTS.COMMON.DEFAULT].video.enabled) {
           isVideo = false;
         }
         config = slotConfig['config'][CONSTANTS.COMMON.DEFAULT];
-        if (config.renderer && !this.isEmptyObject(config.renderer)) {
+        if (config.renderer && !isEmptyObject(config.renderer)) {
           adUnitConfig['renderer'] = config.renderer;
         }
       }
-      if (this.isOwnProperty(slotConfig['config'], kgpv) || iskgpvpresent() || isregexEnabled()) {
+      if (isOwnProperty(slotConfig['config'], kgpv) || iskgpvpresent() || isregexEnabled()) {
         // populating slotlevel config
         const slConfig = selectSlotConfig();
         // if SLConfig present then override default config
@@ -1209,23 +1218,23 @@ exports.getAdUnitConfig = function(sizes, currentSlot) {
         }
 
         if (!config) {
-          config = slotConfig['config'][Object.keys(slotConfig['config']).filter(function(key) {
+          config = slotConfig['config'][Object.keys(slotConfig['config']).filter(key => {
             return key.toLocaleLowerCase() === kgpv.toLowerCase();
           })]
         }
-        this.log('Config' + JSON.stringify(config) + ' found for adSlot: ' + JSON.stringify(currentSlot));
+        log(`Config${JSON.stringify(config)} found for adSlot: ${JSON.stringify(currentSlot)}`);
       } else {
-        this.log('Considering Default Config for ' + JSON.stringify(currentSlot));
+        log(`Considering Default Config for ${JSON.stringify(currentSlot)}`);
       }
       if (config) {
-        if (isNative && config.native && (!this.isOwnProperty(config.native, 'enabled') || config.native.enabled)) {
+        if (isNative && config.native && (!isOwnProperty(config.native, 'enabled') || config.native.enabled)) {
           if (config.native['config']) {
             mediaTypeObject['native'] = config.native['config'];
           } else {
-            this.logWarning('Native Config will not be considered as no config has been provided for slot' + JSON.stringify(currentSlot) + ' or there is no configuration defined in default.');
+            logWarning(`Native Config will not be considered as no config has been provided for slot${JSON.stringify(currentSlot)} or there is no configuration defined in default.`);
           }
         }
-        if (isVideo && config.video && (!this.isOwnProperty(config.video, 'enabled') || config.video.enabled)) {
+        if (isVideo && config.video && (!isOwnProperty(config.video, 'enabled') || config.video.enabled)) {
           if (CONFIG.getAdServer() != CONSTANTS.AD_SERVER.DFP) {
             if (config.video['config']) {
               mediaTypeObject['video'] = config.video['config'];
@@ -1233,75 +1242,78 @@ exports.getAdUnitConfig = function(sizes, currentSlot) {
                 mediaTypeObject['partnerConfig'] = config.video['partnerConfig'];
               }
             } else {
-              this.logWarning('Video Config will not be considered as no config has been provided for slot' + JSON.stringify(currentSlot) + ' or there is no configuration defined in default.');
+              logWarning(`Video Config will not be considered as no config has been provided for slot${JSON.stringify(currentSlot)} or there is no configuration defined in default.`);
             }
           } else {
-            this.logWarning('Video Config will not be considered with DFP selected as AdServer.');
+            logWarning('Video Config will not be considered with DFP selected as AdServer.');
           }
         }
-        if (config.renderer && !this.isEmptyObject(config.renderer)) {
+        if (config.renderer && !isEmptyObject(config.renderer)) {
           adUnitConfig['renderer'] = config.renderer;
         }
-        if (!isBanner || (config.banner && (this.isOwnProperty(config.banner, 'enabled') && !config.banner.enabled))) {
-          this.mediaTypeConfig[divId] = mediaTypeObject;
+        if (!isBanner || (config.banner && (isOwnProperty(config.banner, 'enabled') && !config.banner.enabled))) {
+          mediaTypeConfig[divId] = mediaTypeObject;
           adUnitConfig['mediaTypeObject'] = mediaTypeObject
           return adUnitConfig;
         }
       } else {
-        this.log('Config not found for adSlot: ' + JSON.stringify(currentSlot));
+        log(`Config not found for adSlot: ${JSON.stringify(currentSlot)}`);
       }
     } else {
-      this.logWarning('Slot Type not found in config. Please provide slotType in configuration');
+      logWarning('Slot Type not found in config. Please provide slotType in configuration');
     }
   }
   mediaTypeObject['banner'] = {
-    sizes: sizes
+    sizes
   };
-  this.mediaTypeConfig[divId] = mediaTypeObject;
+  mediaTypeConfig[divId] = mediaTypeObject;
   adUnitConfig['mediaTypeObject'] = mediaTypeObject
   return adUnitConfig;
-};
+}
 
 // removeIf(removeNativeRelatedCode)
-exports.addEventListenerForClass = function(theWindow, theEvent, theClass, eventHandler) {
+export function addEventListenerForClass(theWindow, theEvent, theClass, eventHandler) {
   if (typeof eventHandler !== 'function') {
-    this.log('EventHandler should be a function');
+    log('EventHandler should be a function');
     return false;
   }
-  var elems = this.findElementsByClass(theWindow, theClass);
+  const elems = findElementsByClass(theWindow, theClass);
   if (!theWindow.addEventListener) {
-    theEvent = 'on' + theEvent;
+    theEvent = `on${theEvent}`;
   }
-  for (var i = 0; i < elems.length; i++) {
+  for (let i = 0; i < elems.length; i++) {
     elems[i].addEventListener(theEvent, eventHandler, true);
   }
   return true;
-};
+}
+
 // endRemoveIf(removeNativeRelatedCode)
 
 // removeIf(removeNativeRelatedCode)
-exports.findElementsByClass = function(theWindow, theClass) {
+export function findElementsByClass(theWindow, theClass) {
   return theWindow.document.getElementsByClassName(theClass) || [];
-};
+}
+
 // endRemoveIf(removeNativeRelatedCode)
 
 // removeIf(removeNativeRelatedCode)
-exports.getBidFromEvent = function (theEvent) {
+export function getBidFromEvent(theEvent) {
   return (theEvent && theEvent.target && theEvent.target.attributes && theEvent.target.attributes[CONSTANTS.COMMON.BID_ID] && theEvent.target.attributes[CONSTANTS.COMMON.BID_ID].value) || '';
-};
+}
+
 // endRemoveIf(removeNativeRelatedCode)
 
 // removeIf(removeLegacyAnalyticsRelatedCode)
-exports.getAdFormatFromBidAd = function(ad) {
-  var format = undefined;
-  if (ad && this.isString(ad)) {
+export function getAdFormatFromBidAd(ad) {
+  let format = undefined;
+  if (ad && isString(ad)) {
     // TODO: Uncomment below code once video has been implemented
     try {
-      var videoRegex = new RegExp(/VAST\s+version/);
+      const videoRegex = new RegExp(/VAST\s+version/);
       if (videoRegex.test(ad)) {
         format = CONSTANTS.FORMAT_VALUES.VIDEO;
       } else {
-        var adStr = JSON.parse(ad.replace(/\\/g, ''));
+        const adStr = JSON.parse(ad.replace(/\\/g, ''));
         if (adStr && adStr.native) {
           format = CONSTANTS.FORMAT_VALUES.NATIVE;
         }
@@ -1312,38 +1324,39 @@ exports.getAdFormatFromBidAd = function(ad) {
     // }
   }
   return format;
-};
+}
+
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
 // This common function can be used add hooks for publishers to make changes in flows
-exports.handleHook = function(hookName, arrayOfDataToPass) {
+export function handleHook(hookName, arrayOfDataToPass) {
   // Adding a hook for publishers to modify the data we have
-  if (this.isFunction(window.PWT[hookName])) {
-    this.log('For Hook-name: ' + hookName + ', calling window.PWT.' + hookName + 'function.');
-    window.PWT[hookName].apply(window.PWT, arrayOfDataToPass);
+  if (isFunction(window.PWT[hookName])) {
+    log(`For Hook-name: ${hookName}, calling window.PWT.${hookName}function.`);
+    window.PWT[hookName](...arrayOfDataToPass);
   }
   // else {
-  // 	this.log('Hook-name: '+hookName+', window.PWT.'+hookName+' is not a function.' );
+  // 	log('Hook-name: '+hookName+', window.PWT.'+hookName+' is not a function.' );
   // }
-};
+}
 
-exports.getCurrencyToDisplay = function() {
-  var defaultCurrency = CONFIG.getAdServerCurrency();
+export function getCurrencyToDisplay() {
+  let defaultCurrency = CONFIG.getAdServerCurrency();
   if (defaultCurrency == 0) {
     defaultCurrency = 'USD';
   }
   if (CONFIG.getAdServerCurrency()) {
-    if (window[CONSTANTS.COMMON.PREBID_NAMESPACE] && this.isFunction(window[CONSTANTS.COMMON.PREBID_NAMESPACE].getConfig)) {
-      var pbConf = window[CONSTANTS.COMMON.PREBID_NAMESPACE].getConfig();
+    if (window[CONSTANTS.COMMON.PREBID_NAMESPACE] && isFunction(window[CONSTANTS.COMMON.PREBID_NAMESPACE].getConfig)) {
+      const pbConf = window[CONSTANTS.COMMON.PREBID_NAMESPACE].getConfig();
       if (pbConf && pbConf.currency && pbConf.currency.adServerCurrency) {
         return pbConf.currency.adServerCurrency;
       }
     }
   }
   return defaultCurrency;
-};
+}
 
-exports.getConfigFromRegex = function(klmsForPartner, generatedKey) {
+export function getConfigFromRegex(klmsForPartner, generatedKey) {
   // This function will return the config for the partner for specific slot.
   // KGP would always be AU@DIV@WXH
   // KLM would be an array of regex Config and regex pattern pairs where key would be regex pattern to match
@@ -1354,69 +1367,72 @@ exports.getConfigFromRegex = function(klmsForPartner, generatedKey) {
 		if successful the match the div then size
 		if all are true then return the config else match the next avaiable pattern
 		if none of the pattern match then return the error config not found */
-  var rxConfig = null;
-  var keys = generatedKey.split('@');
-  for (var i = 0; i < klmsForPartner.length; i++) {
-    var klmv = klmsForPartner[i];
-    var rxPattern = klmv.rx;
+  let rxConfig = null;
+  const keys = generatedKey.split('@');
+  for (let i = 0; i < klmsForPartner.length; i++) {
+    const klmv = klmsForPartner[i];
+    const rxPattern = klmv.rx;
     if (keys.length == 3) { // Only execute if generated key length is 3 .
       try {
         // Added second parameter to RegExp to make case insenitive check on AU & DIV parameters.
         if (keys[0].match(new RegExp(rxPattern.AU, 'i')) && keys[1].match(new RegExp(rxPattern.DIV, 'i')) && keys[2].match(new RegExp(rxPattern.SIZE, 'i'))) {
           rxConfig = {
             config: klmv.rx_config,
-            regexPattern: rxPattern.AU + '@' + rxPattern.DIV + '@' + rxPattern.SIZE
+            regexPattern: `${rxPattern.AU}@${rxPattern.DIV}@${rxPattern.SIZE}`
           };
           break;
         }
       } catch (ex) {
-        this.logError(CONSTANTS.MESSAGES.M27 + JSON.stringify(rxPattern));
+        logError(CONSTANTS.MESSAGES.M27 + JSON.stringify(rxPattern));
       }
     } else {
-      this.logWarning(CONSTANTS.MESSAGES.M28 + generatedKey);
+      logWarning(CONSTANTS.MESSAGES.M28 + generatedKey);
     }
   }
   return rxConfig;
-};
+}
 
 // removeIf(removeUserIdRelatedCode)
-exports.getUserIdConfiguration = function() {
-  var userIdConfs = [];
+export function getUserIdConfiguration() {
+  const userIdConfs = [];
   window[pbNameSpace].onSSOLogin({});
-  this.forEachOnObject(CONFIG.getIdentityPartners(), function(parterId, partnerValues) {
-    if (CONSTANTS.EXCLUDE_PARTNER_LIST.indexOf(parterId) < 0) {
-      userIdConfs.push(this.getUserIdParams(partnerValues));
+  forEachOnObject(CONFIG.getIdentityPartners(), function(parterId, partnerValues) {
+    if (!CONSTANTS.EXCLUDE_PARTNER_LIST.includes(parterId)) {
+      userIdConfs.push(getUserIdParams(partnerValues));
     }
   });
-  this.log(CONSTANTS.MESSAGES.IDENTITY.M4 + JSON.stringify(userIdConfs));
+  log(CONSTANTS.MESSAGES.IDENTITY.M4 + JSON.stringify(userIdConfs));
   return userIdConfs;
-};
+}
+
 // endRemoveIf(removeUserIdRelatedCode)
 
 // removeIf(removeUserIdRelatedCode)
-exports.getUserIds = function() {
-  if (this.isFunction(window[CONSTANTS.COMMON.PREBID_NAMESPACE].getUserIds)) {
+export function getUserIds() {
+  if (isFunction(window[CONSTANTS.COMMON.PREBID_NAMESPACE].getUserIds)) {
     return window[CONSTANTS.COMMON.PREBID_NAMESPACE].getUserIds();
   } else {
-    this.logWarning('getUserIds' + CONSTANTS.MESSAGES.IDENTITY.M6);
+    logWarning(`getUserIds${CONSTANTS.MESSAGES.IDENTITY.M6}`);
   };
-};
+}
+
 // endRemoveIf(removeUserIdRelatedCode)
 
 // removeIf(removeUserIdRelatedCode)
-exports.getUserIdsAsEids = function() {
-  if (this.isFunction(window[CONSTANTS.COMMON.PREBID_NAMESPACE].getUserIdsAsEids)) {
+export function getUserIdsAsEids() {
+  if (isFunction(window[CONSTANTS.COMMON.PREBID_NAMESPACE].getUserIdsAsEids)) {
     return window[CONSTANTS.COMMON.PREBID_NAMESPACE].getUserIdsAsEids();
   } else {
-    this.logWarning('getUserIdsAsEids' + CONSTANTS.MESSAGES.IDENTITY.M6);
+    logWarning(`getUserIdsAsEids${CONSTANTS.MESSAGES.IDENTITY.M6}`);
   };
-};
+}
+
 // endRemoveIf(removeUserIdRelatedCode)
 
-exports.getNestedObjectFromArray = function(sourceObject, sourceArray, valueOfLastNode) {
-  var convertedObject = sourceObject;
-  var referenceForNesting = convertedObject;
-  for (var i = 0; i < sourceArray.length - 1; i++) {
+export function getNestedObjectFromArray(sourceObject, sourceArray, valueOfLastNode) {
+  const convertedObject = sourceObject;
+  let referenceForNesting = convertedObject;
+  for (let i = 0; i < sourceArray.length - 1; i++) {
     if (!referenceForNesting[sourceArray[i]]) {
       referenceForNesting[sourceArray[i]] = {};
     }
@@ -1424,103 +1440,111 @@ exports.getNestedObjectFromArray = function(sourceObject, sourceArray, valueOfLa
   }
   referenceForNesting[sourceArray[sourceArray.length - 1]] = valueOfLastNode;
   return convertedObject;
-};
+}
 
-exports.getNestedObjectFromString = function(sourceObject, separator, key, value) {
-  var splitParams = key.split(separator);
+export function getNestedObjectFromString(sourceObject, separator, key, value) {
+  const splitParams = key.split(separator);
   if (splitParams.length == 1) {
     sourceObject[key] = value;
   } else {
-    sourceObject = this.getNestedObjectFromArray(sourceObject, splitParams, value);
+    sourceObject = getNestedObjectFromArray(sourceObject, splitParams, value);
   }
   return sourceObject;
-};
+}
 
-exports.deleteCustomParams = function(params) {
+export function deleteCustomParams(params) {
   delete params.custom;
   return params;
 }
 
-exports.getUserIdParams = function(params) {
-  var userIdParams = {};
-  this.applyDataTypeChangesIfApplicable(params);
-  this.applyCustomParamValuesfApplicable(params);
-  for (var key in params) {
+export function getUserIdParams(params) {
+  let userIdParams = {};
+  applyDataTypeChangesIfApplicable(params);
+  applyCustomParamValuesfApplicable(params);
+  for (const key in params) {
     try {
-      if (CONSTANTS.EXCLUDE_IDENTITY_PARAMS.indexOf(key) == -1) {
-        if (CONSTANTS.TOLOWERCASE_IDENTITY_PARAMS.indexOf(key) > -1) {
+      if (!CONSTANTS.EXCLUDE_IDENTITY_PARAMS.includes(key)) {
+        if (CONSTANTS.TOLOWERCASE_IDENTITY_PARAMS.includes(key)) {
           params[key] = params[key].toLowerCase();
         }
-        if (CONSTANTS.JSON_VALUE_KEYS.indexOf(key) > -1) {
+        if (CONSTANTS.JSON_VALUE_KEYS.includes(key)) {
           params[key] = JSON.parse(params[key]);
         }
-        userIdParams = this.getNestedObjectFromString(userIdParams, '.', key, params[key]);
+        userIdParams = getNestedObjectFromString(userIdParams, '.', key, params[key]);
       }
     } catch (ex) {
-      this.logWarning(CONSTANTS.MESSAGES.IDENTITY.M3, ex);
+      logWarning(CONSTANTS.MESSAGES.IDENTITY.M3, ex);
     }
   }
   if (userIdParams && userIdParams.params && userIdParams.params['loadATS'] == 'true') {
-    	this.initLiveRampAts(userIdParams);
+    	initLiveRampAts(userIdParams);
   }
   if (userIdParams && userIdParams.params && userIdParams.params['loadIDP'] == 'true') {
-    this.initZeoTapJs(userIdParams);
+    initZeoTapJs(userIdParams);
   }
   if (userIdParams && userIdParams.params && userIdParams.params['loadLauncher'] == 'true') {
-    this.initLauncherJs(userIdParams);
+    initLauncherJs(userIdParams);
   }
   if (userIdParams && userIdParams.custom && userIdParams.custom['loadLaunchPad'] == 'true') {
-    this.initLiveRampLaunchPad(userIdParams);
+    initLiveRampLaunchPad(userIdParams);
   }
-  return this.deleteCustomParams(userIdParams);
-};
+  return deleteCustomParams(userIdParams);
+}
 
-exports.getPartnerParams = function(params) {
-  var pparams = {};
-  for (var key in params) {
+export function getPartnerParams(params) {
+  let pparams = {};
+  for (const key in params) {
     try {
-      pparams = this.getNestedObjectFromString(pparams, '.', key, params[key]);
+      pparams = getNestedObjectFromString(pparams, '.', key, params[key]);
     } catch (ex) {
-      this.logWarning(CONSTANTS.MESSAGES.M29, ex);
+      logWarning(CONSTANTS.MESSAGES.M29, ex);
     }
   }
   return pparams;
-};
+}
 
 // removeIf(removeLegacyAnalyticsRelatedCode)
-exports.getAdDomain = function(bidResponse) {
-  if (bidResponse.meta && bidResponse.meta.advertiserDomains && bidResponse.meta.advertiserDomains.length > 0) {
-    var adomain = bidResponse.meta.advertiserDomains[0];
+export function getAdDomain({meta}) {
+  if (meta && meta.advertiserDomains && meta.advertiserDomains.length > 0) {
+    const adomain = meta.advertiserDomains[0];
 
     if (adomain) {
       try {
-        var hostname = new URL(adomain);
+        const hostname = new URL(adomain);
         return hostname.hostname.replace('www.', '');
       } catch (e) {
-        this.log('Adomain URL (Not a proper URL):' + adomain);
+        log(`Adomain URL (Not a proper URL):${adomain}`);
         return adomain.split('/')[0].replace('www.', '');
       }
     }
   }
 }
+
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
 // removeIf(removeLegacyAnalyticsRelatedCode)
-exports.getTgid = function() {
-  var testGroupId = parseInt(PWT.testGroupId || 0);
+export function getTgid() {
+  const testGroupId = parseInt(PWT.testGroupId || 0);
   if (testGroupId <= 15 && testGroupId >= 0) {
 	  return testGroupId;
   }
   return 0;
-};
+}
+
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
 // removeIf(removeLegacyAnalyticsRelatedCode)
-exports.generateMonetizationPixel = function(slotID, theBid) {
-  var pixelURL = CONFIG.getMonetizationPixelURL();
-  var pubId = CONFIG.getPublisherId();
-  var netEcpm, grossEcpm, kgpv, bidId, adapterId, adapterName, adUnitId;
-  var sspID = '';
+export function generateMonetizationPixel(slotID, theBid) {
+  let pixelURL = CONFIG.getMonetizationPixelURL();
+  const pubId = CONFIG.getPublisherId();
+  let netEcpm;
+  let grossEcpm;
+  let kgpv;
+  let bidId;
+  let adapterId;
+  let adapterName;
+  let adUnitId;
+  let sspID = '';
   const isAnalytics = true; // this flag is required to get grossCpm and netCpm in dollars instead of adserver currency
   const prebidBidId = (theBid.pbbid && theBid.pbbid.prebidBidId) || (theBid.prebidBidId);
 
@@ -1529,10 +1553,10 @@ exports.generateMonetizationPixel = function(slotID, theBid) {
     return;
   }
 
-  if (this.isFunction(theBid.getGrossEcpm)) {
+  if (isFunction(theBid.getGrossEcpm)) {
     grossEcpm = theBid.getGrossEcpm(isAnalytics);
   } else {
-    if (CONFIG.getAdServerCurrency() && this.isFunction(theBid.getCpmInNewCurrency)) {
+    if (CONFIG.getAdServerCurrency() && isFunction(theBid.getCpmInNewCurrency)) {
       grossEcpm = window.parseFloat(theBid.getCpmInNewCurrency(CONSTANTS.COMMON.ANALYTICS_CURRENCY));
     } else {
       if (CONFIG.isPrebidPubMaticAnalyticsEnabled() && theBid.originalCpm) {
@@ -1542,7 +1566,7 @@ exports.generateMonetizationPixel = function(slotID, theBid) {
       }
     }
   }
-  if (this.isFunction(theBid.getAdapterID)) {
+  if (isFunction(theBid.getAdapterID)) {
     adapterId = theBid.getAdapterID()
   } else {
     adapterId = theBid.bidderCode
@@ -1555,14 +1579,14 @@ exports.generateMonetizationPixel = function(slotID, theBid) {
   adapterName = CONFIG.getAdapterNameForAlias(adapterId);
 
   // Do we need all checks or we can just use one check
-  if (this.isFunction(theBid.getNetEcpm)) {
+  if (isFunction(theBid.getNetEcpm)) {
     netEcpm = theBid.getNetEcpm(isAnalytics)
   } else {
     // else would be executed in case this function is called from prebid for vast updation
     netEcpm = window.parseFloat((grossEcpm * CONFIG.getAdapterRevShare(adapterId)).toFixed(CONSTANTS.COMMON.BID_PRECISION))
   }
 
-  if (this.isFunction(theBid.getBidID)) {
+  if (isFunction(theBid.getBidID)) {
     bidId = theBid.getBidID()
   } else {
     if (CONFIG.isPrebidPubMaticAnalyticsEnabled() && theBid.adId) {
@@ -1571,23 +1595,23 @@ exports.generateMonetizationPixel = function(slotID, theBid) {
       bidId = window.PWT.bidMap[slotID].adapters[adapterId].bids[Object.keys(window.PWT.bidMap[slotID].adapters[adapterId].bids)[0]].bidID;
     }
   }
-  if (this.isFunction(theBid.getKGPV)) {
+  if (isFunction(theBid.getKGPV)) {
     kgpv = theBid.getKGPV()
   } else {
     kgpv = window.PWT.bidMap[slotID].adapters[adapterId].bids[Object.keys(window.PWT.bidMap[slotID].adapters[adapterId].bids)[0]].getKGPV(false, theBid.mediaType);
   }
-  if (this.isFunction(theBid.getsspID)) {
+  if (isFunction(theBid.getsspID)) {
     sspID = theBid.getsspID();
   } else {
     sspID = theBid.sspID || '';
   }
 
-  var origAdUnit = bidManager.getAdUnitInfo(slotID);
+  const origAdUnit = bidManager.getAdUnitInfo(slotID);
   adUnitId = origAdUnit.adUnitId || slotID;
-  var iiid = window.PWT.bidMap[slotID].getImpressionID();
-  var isRefreshed = (window.PWT.newAdUnits && window.PWT.newAdUnits[iiid] && window.PWT.newAdUnits[iiid][slotID] && window.PWT.newAdUnits[iiid][slotID]['pubmaticAutoRefresh'] && window.PWT.newAdUnits[iiid][slotID]['pubmaticAutoRefresh']['isRefreshed']) ? 1 : 0;
+  const iiid = window.PWT.bidMap[slotID].getImpressionID();
+  const isRefreshed = (window.PWT.newAdUnits && window.PWT.newAdUnits[iiid] && window.PWT.newAdUnits[iiid][slotID] && window.PWT.newAdUnits[iiid][slotID]['pubmaticAutoRefresh'] && window.PWT.newAdUnits[iiid][slotID]['pubmaticAutoRefresh']['isRefreshed']) ? 1 : 0;
   // var impressionID = PWT.bidMap[slotID].impressionID;
-  const adv = this.getAdDomain(theBid.pbbid || theBid) || undefined;
+  const adv = getAdDomain(theBid.pbbid || theBid) || undefined;
   const fskp = window.PWT.floorData
     ? (window.PWT.floorData[iiid]
       ? (window.PWT.floorData[iiid].floorRequestData
@@ -1596,51 +1620,52 @@ exports.generateMonetizationPixel = function(slotID, theBid) {
       : undefined)
     : undefined;
 
-  pixelURL += 'pubid=' + pubId;
-  pixelURL += '&purl=' + window.encodeURIComponent(this.metaInfo.pageURL);
-  pixelURL += '&tst=' + this.getCurrentTimestamp();
-  pixelURL += '&iid=' + window.encodeURIComponent(window.PWT.bidMap[slotID].getImpressionID());
-  pixelURL += '&bidid=' + (prebidBidId ? window.encodeURIComponent(prebidBidId) : window.encodeURIComponent(bidId));
-  pixelURL += '&origbidid=' + window.encodeURIComponent(bidId);
-  pixelURL += '&pid=' + window.encodeURIComponent(CONFIG.getProfileID());
-  pixelURL += '&pdvid=' + window.encodeURIComponent(CONFIG.getProfileDisplayVersionID());
-  pixelURL += '&slot=' + window.encodeURIComponent(slotID);
-  pixelURL += '&au=' + window.encodeURIComponent(adUnitId);
-  pixelURL += '&bc=' + window.encodeURIComponent(adapterId);
-  pixelURL += '&pn=' + window.encodeURIComponent(adapterName);
-  pixelURL += '&en=' + window.encodeURIComponent(netEcpm);
-  pixelURL += '&eg=' + window.encodeURIComponent(grossEcpm);
-  pixelURL += '&kgpv=' + window.encodeURIComponent(kgpv);
-  pixelURL += '&piid=' + window.encodeURIComponent(sspID);
-  pixelURL += '&rf=' + window.encodeURIComponent(isRefreshed);
+  pixelURL += `pubid=${pubId}`;
+  pixelURL += `&purl=${window.encodeURIComponent(metaInfo.pageURL)}`;
+  pixelURL += `&tst=${getCurrentTimestamp()}`;
+  pixelURL += `&iid=${window.encodeURIComponent(window.PWT.bidMap[slotID].getImpressionID())}`;
+  pixelURL += `&bidid=${prebidBidId ? window.encodeURIComponent(prebidBidId) : window.encodeURIComponent(bidId)}`;
+  pixelURL += `&origbidid=${window.encodeURIComponent(bidId)}`;
+  pixelURL += `&pid=${window.encodeURIComponent(CONFIG.getProfileID())}`;
+  pixelURL += `&pdvid=${window.encodeURIComponent(CONFIG.getProfileDisplayVersionID())}`;
+  pixelURL += `&slot=${window.encodeURIComponent(slotID)}`;
+  pixelURL += `&au=${window.encodeURIComponent(adUnitId)}`;
+  pixelURL += `&bc=${window.encodeURIComponent(adapterId)}`;
+  pixelURL += `&pn=${window.encodeURIComponent(adapterName)}`;
+  pixelURL += `&en=${window.encodeURIComponent(netEcpm)}`;
+  pixelURL += `&eg=${window.encodeURIComponent(grossEcpm)}`;
+  pixelURL += `&kgpv=${window.encodeURIComponent(kgpv)}`;
+  pixelURL += `&piid=${window.encodeURIComponent(sspID)}`;
+  pixelURL += `&rf=${window.encodeURIComponent(isRefreshed)}`;
 
-  pixelURL += '&plt=' + window.encodeURIComponent(this.getDevicePlatform());
-  pixelURL += (this.isFunction(theBid.getWidth) && this.isFunction(theBid.getHeight))
-    ? ('&psz=' + window.encodeURIComponent(theBid.getWidth() + 'x' + theBid.getHeight()))
-    : ((this.isFunction(theBid.getSize))
-      ? ('&psz=' + window.encodeURIComponent(theBid.getSize()))
-      : '&psz=' + window.encodeURIComponent(theBid.width + 'x' + theBid.height));
-  pixelURL += '&tgid=' + window.encodeURIComponent(this.getTgid());
-  adv && (pixelURL += '&adv=' + window.encodeURIComponent(adv));
-  pixelURL += '&orig=' + window.encodeURIComponent((this.metaInfo && this.metaInfo.pageDomain) || '');
-  pixelURL += '&ss=' + window.encodeURIComponent(this.isFunction(theBid.getServerSideStatus)
-    ? (theBid.getServerSideStatus() ? 1 : 0)
-    : (CONFIG.isServerSideAdapter(adapterId) ? 1 : 0));
-  (fskp != undefined) && (pixelURL += '&fskp=' + window.encodeURIComponent(fskp));
-  pixelURL += '&af=' + window.encodeURIComponent(this.isFunction(theBid.getAdFormat)
-    ? theBid.getAdFormat() : (theBid.mediaType || undefined));
+  pixelURL += `&plt=${window.encodeURIComponent(getDevicePlatform())}`;
+  pixelURL += (isFunction(theBid.getWidth) && isFunction(theBid.getHeight))
+    ? (`&psz=${window.encodeURIComponent(`${theBid.getWidth()}x${theBid.getHeight()}`)}`)
+    : ((isFunction(theBid.getSize))
+      ? (`&psz=${window.encodeURIComponent(theBid.getSize())}`)
+      : `&psz=${window.encodeURIComponent(`${theBid.width}x${theBid.height}`)}`);
+  pixelURL += `&tgid=${window.encodeURIComponent(getTgid())}`;
+  adv && (pixelURL += `&adv=${window.encodeURIComponent(adv)}`);
+  pixelURL += `&orig=${window.encodeURIComponent((metaInfo && metaInfo.pageDomain) || '')}`;
+  pixelURL += `&ss=${window.encodeURIComponent(isFunction(theBid.getServerSideStatus)
+  ? (theBid.getServerSideStatus() ? 1 : 0)
+  : (CONFIG.isServerSideAdapter(adapterId) ? 1 : 0))}`;
+  (fskp != undefined) && (pixelURL += `&fskp=${window.encodeURIComponent(fskp)}`);
+  pixelURL += `&af=${window.encodeURIComponent(isFunction(theBid.getAdFormat)
+  ? theBid.getAdFormat() : (theBid.mediaType || undefined))}`;
 
   return CONSTANTS.COMMON.PROTOCOL + pixelURL;
-};
+}
+
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
 // removeIf(removeLegacyAnalyticsRelatedCode)
-exports.UpdateVastWithTracker = function(bid, vast) {
+export function UpdateVastWithTracker(bid, vast) {
   try {
-    var domParser = new DOMParser();
-    var parsedVast = domParser.parseFromString(vast, 'application/xml');
-    var impEle = parsedVast.createElement('Impression');
-    impEle.innerHTML =	CONFIG.isPrebidPubMaticAnalyticsEnabled() ? '' : '<![CDATA[' + this.generateMonetizationPixel(bid.adUnitCode, bid) + ']]>';
+    const domParser = new DOMParser();
+    const parsedVast = domParser.parseFromString(vast, 'application/xml');
+    const impEle = parsedVast.createElement('Impression');
+    impEle.innerHTML =	CONFIG.isPrebidPubMaticAnalyticsEnabled() ? '' : `<![CDATA[${generateMonetizationPixel(bid.adUnitCode, bid)}]]>`;
     if (parsedVast.getElementsByTagName('Wrapper').length == 1) {
       parsedVast.getElementsByTagName('Wrapper')[0].appendChild(impEle);
     } else if (parsedVast.getElementsByTagName('InLine').length == 1) {
@@ -1650,29 +1675,31 @@ exports.UpdateVastWithTracker = function(bid, vast) {
   } catch (ex) {
     return vast;
   }
-};
+}
+
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
-exports.getDomainFromURL = function(url) {
-  var a = window.document.createElement('a');
+export function getDomainFromURL(url) {
+  const a = window.document.createElement('a');
   a.href = url;
   return a.hostname;
-};
+}
 
 // removeIf(removeLegacyAnalyticsRelatedCode)
-exports.replaceAuctionPrice = function(str, cpm) {
+export function replaceAuctionPrice(str, cpm) {
   if (!str) return;
   return str.replace(/\$\{AUCTION_PRICE\}/g, cpm);
-};
+}
+
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
 // removeIf(removeInStreamRelatedCode)
-exports.getCustomParamsForDFPVideo = function(customParams, bid) {
+export function getCustomParamsForDFPVideo(customParams, bid) {
   const adserverTargeting = (bid && bid.adserverTargeting) || {};
-  var targetingKeys = {}
-  for (var key in adserverTargeting) {
-    if (this.isOwnProperty(adserverTargeting, key)) {
-      if (this.isArray(adserverTargeting[key])) {
+  const targetingKeys = {};
+  for (const key in adserverTargeting) {
+    if (isOwnProperty(adserverTargeting, key)) {
+      if (isArray(adserverTargeting[key])) {
         targetingKeys[key] = adserverTargeting[key].join();
       } else {
         targetingKeys[key] = adserverTargeting[key];
@@ -1683,17 +1710,18 @@ exports.getCustomParamsForDFPVideo = function(customParams, bid) {
     targetingKeys,
     customParams);
   return customParams;
-};
+}
+
 // endRemoveIf(removeInStreamRelatedCode)
 
 // removeIf(removeLegacyAnalyticsRelatedCode)
-exports.getDevicePlatform = function() {
-  var deviceType = 3;
+export function getDevicePlatform() {
+  let deviceType = 3;
   try {
-    var ua = navigator.userAgent;
-    if (ua && this.isString(ua) && ua.trim() != '') {
+    let ua = navigator.userAgent;
+    if (ua && isString(ua) && ua.trim() != '') {
       ua = ua.toLowerCase().trim();
-      var isMobileRegExp = new RegExp('(mobi|tablet|ios).*');
+      const isMobileRegExp = new RegExp('(mobi|tablet|ios).*');
       if (ua.match(isMobileRegExp)) {
         deviceType = 2;
       } else {
@@ -1701,14 +1729,15 @@ exports.getDevicePlatform = function() {
       }
     }
   } catch (ex) {
-    this.logError('Unable to get device platform', ex);
+    logError('Unable to get device platform', ex);
   }
   return deviceType;
 }
+
 // endRemoveIf(removeLegacyAnalyticsRelatedCode)
 
-exports.getOWConfig = function() {
-  var obj = {
+export function getOWConfig() {
+  const obj = {
     'timeout': CONFIG.getTimeout(),
     'openwrap_version': CONFIG[CONSTANTS.COMMON.OWVERSION],
     'prebid_version': CONFIG[CONSTANTS.COMMON.PBVERSION],
@@ -1719,59 +1748,61 @@ exports.getOWConfig = function() {
 }
 
 // removeIf(removeIdHubOnlyRelatedCode)
-exports.updateAdUnits = function(adUnits) {
-  if (this.isArray(adUnits)) {
-    adUnits.forEach(function(adUnit) {
-      adUnit.bids.forEach(function(bid) {
-        this.updateUserIds(bid);
+export function updateAdUnits(adUnits) {
+  if (isArray(adUnits)) {
+    adUnits.forEach(({bids}) => {
+      bids.forEach(function(bid) {
+        updateUserIds(bid);
       });
     });
-  } else if (!this.isEmptyObject(adUnits)) {
+  } else if (!isEmptyObject(adUnits)) {
     adUnits.bids.forEach(function(bid) {
-      this.updateUserIds(bid);
+      updateUserIds(bid);
     });
   }
-};
+}
+
 // endRemoveIf(removeIdHubOnlyRelatedCode)
 
 // removeIf(removeIdHubOnlyRelatedCode)
-exports.updateUserIds = function(bid) {
-  // this.idsAppendedToAdUnits =true;
-  if (this.isUndefined(bid.userId)) {
-    bid['userId'] = this.getUserIds();
+export function updateUserIds(bid) {
+  // idsAppendedToAdUnits =true;
+  if (isUndefined(bid.userId)) {
+    bid['userId'] = getUserIds();
   } else if (bid.userId) {
     /* istanbul ignore next */
-    bid.userId = Object.assign(bid.userId, this.getUserIds());
+    bid.userId = Object.assign(bid.userId, getUserIds());
   }
-  if (this.isUndefined(bid.userIdAsEids)) {
-    bid['userIdAsEids'] = this.getUserIdsAsEids();
-  } else if (this.isArray(bid.userIdAsEids)) {
-    var idsPresent = new Set();
-    var ids = this.getUserIdsAsEids().concat(bid.userIdAsEids);
-    if (this.isArray(ids) && ids.length > 0) {
-      ids = ids.filter(function(id) {
-        if (id.source) {
-          if (idsPresent.has(id.source)) {
+  if (isUndefined(bid.userIdAsEids)) {
+    bid['userIdAsEids'] = getUserIdsAsEids();
+  } else if (isArray(bid.userIdAsEids)) {
+    const idsPresent = new Set();
+    let ids = getUserIdsAsEids().concat(bid.userIdAsEids);
+    if (isArray(ids) && ids.length > 0) {
+      ids = ids.filter(({source}) => {
+        if (source) {
+          if (idsPresent.has(source)) {
             return false;
           }
-          idsPresent.add(id.source);
+          idsPresent.add(source);
         }
         return true;
       })
     }
     bid.userIdAsEids = ids;
   }
-};
+}
+
 // endRemoveIf(removeIdHubOnlyRelatedCode)
-exports.getLiverampParams = function(params) {
+export function getLiverampParams(params) {
   if (params.params.cssSelectors && params.params.cssSelectors.length > 0) {
     params.params.cssSelectors = params.params.cssSelectors.split(',');
   }
-  var userIdentity = window[pbNameSpace].getUserIdentities() || {};
-  var enableSSO = CONFIG.isSSOEnabled() || false;
-  var detectionMechanism = params.params.detectionMechanism;
-  var enableCustomId = params.params.enableCustomId === 'true';
-  var atsObject = {
+  const userIdentity = window[pbNameSpace].getUserIdentities() || {};
+  const enableSSO = CONFIG.isSSOEnabled() || false;
+  const detectionMechanism = params.params.detectionMechanism;
+  const enableCustomId = params.params.enableCustomId === 'true';
+  const atsObject = {
     'placementID': params.params.pid,
     'storageType': params.params.storageType,
     'logging': params.params.logging // "error"
@@ -1798,27 +1829,27 @@ exports.getLiverampParams = function(params) {
     case 'direct':
       atsObject.emailHashes = undefined;
       if (window.PWT && (window.PWT.OVERRIDES_SCRIPT_BASED_MODULES && window.PWT.OVERRIDES_SCRIPT_BASED_MODULES.includes('identityLink')) || window.PWT.OVERRIDES_SCRIPT_BASED_MODULES === undefined) {
-        var emailHash = enableSSO && userIdentity.emailHash ? userIdentity.emailHash : userIdentity.pubProvidedEmailHash ? userIdentity.pubProvidedEmailHash : undefined;
+        const emailHash = enableSSO && userIdentity.emailHash ? userIdentity.emailHash : userIdentity.pubProvidedEmailHash ? userIdentity.pubProvidedEmailHash : undefined;
         atsObject.emailHashes = emailHash && [emailHash['MD5'], emailHash['SHA1'], emailHash['SHA256']] || undefined;
       }
       /* do we want to keep sso data under direct option?
 			if yes, if sso is enabled and 'direct' is selected as detection mechanism, sso emails will be sent to ats script.
 			if sso is disabled, and 'direct' is selected as detection mechanism, we will look for publisher provided email ids, and if available the hashes will be sent to ats script.
 			*/
-      if (enableCustomId && this.isFunction(window[pbNameSpace].getUserIdentities) && window[pbNameSpace].getUserIdentities() !== undefined) {
+      if (enableCustomId && isFunction(window[pbNameSpace].getUserIdentities) && window[pbNameSpace].getUserIdentities() !== undefined) {
         atsObject.customerID = window[pbNameSpace].getUserIdentities().customerID || undefined;
       }
       break;
   };
   return atsObject;
-};
+}
 
-exports.getEmailHashes = function() {
-  var userIdentity = window[pbNameSpace].getUserIdentities() || {};
-  var enableSSO = CONFIG.isSSOEnabled() || false;
-  var emailHash = enableSSO && userIdentity.emailHash ? userIdentity.emailHash : userIdentity.pubProvidedEmailHash ? userIdentity.pubProvidedEmailHash : undefined;
-  var emailHashArr = [];
-  this.forEachOnObject(emailHash, function (keyName, keyValue) {
+export function getEmailHashes() {
+  const userIdentity = window[pbNameSpace].getUserIdentities() || {};
+  const enableSSO = CONFIG.isSSOEnabled() || false;
+  const emailHash = enableSSO && userIdentity.emailHash ? userIdentity.emailHash : userIdentity.pubProvidedEmailHash ? userIdentity.pubProvidedEmailHash : undefined;
+  const emailHashArr = [];
+  forEachOnObject(emailHash, (keyName, keyValue) => {
     if (keyValue !== undefined) {
       emailHashArr.push(keyValue);
     }
@@ -1826,17 +1857,17 @@ exports.getEmailHashes = function() {
   return emailHashArr.length > 0 ? emailHashArr : undefined;
 }
 
-exports.initLiveRampLaunchPad = function (params) {
-  var lpURL = 'https://launchpad-wrapper.privacymanager.io/' + params.custom.configurationId + '/launchpad-liveramp.js';
+export function initLiveRampLaunchPad({custom}) {
+  const lpURL = `https://launchpad-wrapper.privacymanager.io/${custom.configurationId}/launchpad-liveramp.js`;
   function addLaunchPad() {
-    var launchPadScript = document.createElement('script');
-    launchPadScript.onload = function () {
+    const launchPadScript = document.createElement('script');
+    launchPadScript.onload = () => {
       __launchpad('addEventListener', 1, function() {
-        var isDirectMode = !(ats.outputCurrentConfiguration()['DETECTION_MODULE_INFO']) ||
+        const isDirectMode = !(ats.outputCurrentConfiguration()['DETECTION_MODULE_INFO']) ||
 									ats.outputCurrentConfiguration()['ENVELOPE_MODULE_INFO']['ENVELOPE_MODULE_CONFIG']['startWithExternalId'];
         if (isDirectMode) { // If direct or detect/direct mode
           if (window.PWT && (window.PWT.OVERRIDES_SCRIPT_BASED_MODULES && window.PWT.OVERRIDES_SCRIPT_BASED_MODULES.includes('identityLink')) || window.PWT.OVERRIDES_SCRIPT_BASED_MODULES === undefined) {
-            var emailHashes = this.getEmailHashes();
+            const emailHashes = getEmailHashes();
             emailHashes && window.ats.setAdditionalData({'type': 'emailHashes', 'id': emailHashes});
           }
         }
@@ -1846,16 +1877,16 @@ exports.initLiveRampLaunchPad = function (params) {
     document.body.appendChild(launchPadScript);
   }
   addLaunchPad();
-};
+}
 
-exports.getPublinkLauncherParams = function(params) {
+export function getPublinkLauncherParams(params) {
   if (params.params.cssSelectors && params.params.cssSelectors.length > 0) {
     params.params.cssSelectors = params.params.cssSelectors.split(',');
   }
-  var userIdentity = window[pbNameSpace].getUserIdentities() || {};
-  var enableSSO = CONFIG.isSSOEnabled() || false;
-  var detectionMechanism = params.params.detectionMechanism;
-  var lnchObject = {
+  const userIdentity = window[pbNameSpace].getUserIdentities() || {};
+  const enableSSO = CONFIG.isSSOEnabled() || false;
+  const detectionMechanism = params.params.detectionMechanism;
+  const lnchObject = {
     'apiKey': params.params.api_key,
     'siteId': params.params.site_id,
   };
@@ -1869,7 +1900,7 @@ exports.getPublinkLauncherParams = function(params) {
       break;
     case 'direct':
       if (window.PWT && (window.PWT.OVERRIDES_SCRIPT_BASED_MODULES && window.PWT.OVERRIDES_SCRIPT_BASED_MODULES.includes('publinkId')) || window.PWT.OVERRIDES_SCRIPT_BASED_MODULES === undefined) {
-        var emailHash = enableSSO && userIdentity.emailHash ? userIdentity.emailHash : userIdentity.pubProvidedEmailHash ? userIdentity.pubProvidedEmailHash : undefined;
+        const emailHash = enableSSO && userIdentity.emailHash ? userIdentity.emailHash : userIdentity.pubProvidedEmailHash ? userIdentity.pubProvidedEmailHash : undefined;
         lnchObject.emailHashes = emailHash && [emailHash['MD5'], emailHash['SHA256']] || undefined;
       }
       /* do we want to keep sso data under direct option?
@@ -1879,13 +1910,13 @@ exports.getPublinkLauncherParams = function(params) {
       break;
   };
   return lnchObject;
-};
+}
 
-exports.initLiveRampAts = function (params) {
+export function initLiveRampAts(params) {
   function addATS() {
-    var atsScript = document.createElement('script');
-    var atsObject = this.getLiverampParams(params);
-    atsScript.onload = function () {
+    const atsScript = document.createElement('script');
+    const atsObject = getLiverampParams(params);
+    atsScript.onload = () => {
       window.ats && window.ats.start(atsObject);
     };
     atsScript.src = 'https://ats.rlcdn.com/ats.js';
@@ -1894,32 +1925,32 @@ exports.initLiveRampAts = function (params) {
   if (document.readyState == 'complete') {
     addATS();
   } else {
-    window.addEventListener('load', function () {
+    window.addEventListener('load', () => {
       setTimeout(addATS, 1000);
     });
   }
-};
+}
 
-exports.initZeoTapJs = function(params) {
+export function initZeoTapJs({partnerId}) {
   function addZeoTapJs() {
-    var n = document; var t = window;
-    var userIdentity = window[pbNameSpace].getUserIdentities() || {};
-    var enableSSO = CONFIG.isSSOEnabled() || false;
-    var userIdentityObject = {};
+    let n = document; const t = window;
+    const userIdentity = window[pbNameSpace].getUserIdentities() || {};
+    const enableSSO = CONFIG.isSSOEnabled() || false;
+    let userIdentityObject = {};
     if (window.PWT && (window.PWT.OVERRIDES_SCRIPT_BASED_MODULES && window.PWT.OVERRIDES_SCRIPT_BASED_MODULES.includes('zeotapIdPlus')) || window.PWT.OVERRIDES_SCRIPT_BASED_MODULES === undefined) {
       userIdentityObject = {
         email: enableSSO && userIdentity.emailHash ? userIdentity.emailHash['SHA256'] : userIdentity.pubProvidedEmailHash ? userIdentity.pubProvidedEmailHash['SHA256'] : undefined
       };
     };
-    var e = n.createElement('script');
+    const e = n.createElement('script');
     e.type = 'text/javascript',
     e.crossorigin = 'anonymous'
     e.async = !0,
     e.src = 'https://content.zeotap.com/sdk/idp.min.js',
-    e.onload = function() {};
+    e.onload = () => {};
     n = n.getElementsByTagName('script')[0];
-    var initialsationObject = {
-      partnerId: params.partnerId,
+    const initialsationObject = {
+      partnerId,
       allowIDP: true,
       useConsent: (CONFIG.getCCPA() || CONFIG.getGdpr()),
       checkForCMP: (CONFIG.getCCPA() || CONFIG.getGdpr())
@@ -1928,15 +1959,15 @@ exports.initZeoTapJs = function(params) {
 
     n = t.zeotap || {_q: [], _qcmp: []};
 
-    !(function(n, t, e) {
-      for (var o = 0; o < t.length; o++) {
-        !(function(t) {
-          n[t] = function() {
-            n[e].push([t].concat(Array.prototype.slice.call(arguments, 0)))
+    !((n, t, e) => {
+      for (let o = 0; o < t.length; o++) {
+        !(t => {
+          n[t] = (...args) => {
+            n[e].push([t].concat(Array.prototype.slice.call(args, 0)))
           }
-        }(t[o]))
+        })(t[o])
       }
-    }(n, ['callMethod'], '_q')),
+    })(n, ['callMethod'], '_q'),
     t.zeotap = n,
     t.zeotap.callMethod('init', initialsationObject),
     t.zeotap.callMethod('setUserIdentities', userIdentityObject, true);
@@ -1945,19 +1976,19 @@ exports.initZeoTapJs = function(params) {
   if (document.readyState == 'complete') {
     addZeoTapJs();
   } else {
-    window.addEventListener('load', function () {
+    window.addEventListener('load', () => {
       setTimeout(addZeoTapJs, 1000);
     });
   }
-};
+}
 
-exports.initLauncherJs = function (params) {
+export function initLauncherJs(params) {
   window.cnvr_launcher_options = {lid: params.params.launcher_id};
   function loadLauncher() {
-    var launchScript = document.createElement('script');
-    var launchObject = this.getPublinkLauncherParams(params);
-    launchScript.onload = function () {
-      window.conversant.getLauncherObject = function() {
+    const launchScript = document.createElement('script');
+    const launchObject = getPublinkLauncherParams(params);
+    launchScript.onload = () => {
+      window.conversant.getLauncherObject = () => {
         return launchObject;
       }
       window.conversant && window.conversant.launch('publink', 'start', launchObject);
@@ -1968,26 +1999,26 @@ exports.initLauncherJs = function (params) {
   if (document.readyState == 'complete') {
     loadLauncher();
   } else {
-    window.addEventListener('load', function () {
+    window.addEventListener('load', () => {
       setTimeout(loadLauncher, 1000);
     });
   }
-};
+}
 
-exports.getRandomNumberBelow100 = function() {
+export function getRandomNumberBelow100() {
   return Math.floor(Math.random() * 100);
-};
+}
 
-exports.getUpdatedKGPVForVideo = function(kgpv, adFormat) {
+export function getUpdatedKGPVForVideo(kgpv, adFormat) {
   if (adFormat == CONSTANTS.FORMAT_VALUES.VIDEO) {
-    var videoKgpv = ['', '0x0'];
-    var splitKgpv = kgpv.split('@');
+    const videoKgpv = ['', '0x0'];
+    const splitKgpv = kgpv.split('@');
     // Adding this check for Div Mapping Only
     if (splitKgpv.length > 1) {
       if (splitKgpv.length == 2) {
-        if (splitKgpv[1].indexOf(':') > -1) {
-          var kgpvIndex = splitKgpv[1].split(':');
-          videoKgpv[1] = videoKgpv[1] + ':' + kgpvIndex[1];
+        if (splitKgpv[1].includes(':')) {
+          const kgpvIndex = splitKgpv[1].split(':');
+          videoKgpv[1] = `${videoKgpv[1]}:${kgpvIndex[1]}`;
         }
         videoKgpv[0] = splitKgpv[0];
       }
@@ -1995,28 +2026,28 @@ exports.getUpdatedKGPVForVideo = function(kgpv, adFormat) {
     }
   }
   return kgpv;
-};
+}
 
-exports.applyDataTypeChangesIfApplicable = function(params) {
-  var value;
+export function applyDataTypeChangesIfApplicable(params) {
+  let value;
   if (params.name in CONSTANTS.SPECIAL_CASE_ID_PARTNERS) {
     for (partnerName in CONSTANTS.SPECIAL_CASE_ID_PARTNERS) {
       if (partnerName === params.name) {
         for (key in CONSTANTS.SPECIAL_CASE_ID_PARTNERS[partnerName]) {
-          var paramValue = params[key];
+          const paramValue = params[key];
           switch (CONSTANTS.SPECIAL_CASE_ID_PARTNERS[partnerName][key]) {
             case 'number':
               if (paramValue && typeof paramValue !== 'number') {
                 value = parseInt(paramValue)
                 isNaN(value)
-                  ? this.logError(partnerName + ": Invalid parameter value '" + paramValue + "' for parameter " + key)
+                  ? logError(`${partnerName}: Invalid parameter value '${paramValue}' for parameter ${key}`)
                   : params[key] = value;
               }
               break;
             case 'array':
               if (paramValue) {
                 if (typeof paramValue === 'string') {
-                  var arr = paramValue.split(',').map(function(item) {
+                  const arr = paramValue.split(',').map(item => {
                     return item.trim();
                   });
                   if (arr.length > 0) {
@@ -2043,10 +2074,10 @@ exports.applyDataTypeChangesIfApplicable = function(params) {
   }
 }
 
-exports.applyCustomParamValuesfApplicable = function(params) {
+export function applyCustomParamValuesfApplicable(params) {
   if (params.name in CONSTANTS.ID_PARTNERS_CUSTOM_VALUES) {
-    var partnerValues = CONSTANTS.ID_PARTNERS_CUSTOM_VALUES[params.name];
-    var i = 0;
+    const partnerValues = CONSTANTS.ID_PARTNERS_CUSTOM_VALUES[params.name];
+    let i = 0;
     for (;i < partnerValues.length; i++) {
       if (!params[partnerValues[i]['key']]) {
         params[partnerValues[i]['key']] = partnerValues[i]['value'];
@@ -2055,9 +2086,10 @@ exports.applyCustomParamValuesfApplicable = function(params) {
   }
 }
 
-exports.getBrowserDetails = function() {
+export function getBrowserDetails() {
   return bidManager.getBrowser().toString();
 }
-exports.getPltForFloor = function() {
-  return this.getDevicePlatform().toString();
+
+export function getPltForFloor() {
+  return getDevicePlatform().toString();
 }

@@ -1,7 +1,7 @@
 // todo:
 // remove unnecessary constants
 
-exports.COMMON = {
+export const COMMON = {
   'BID_PRECISION': 2,
   'DEAL_KEY_FIRST_PART': 'pwtdeal_',
   'DEAL_KEY_VALUE_SEPARATOR': '_-_',
@@ -56,7 +56,7 @@ exports.COMMON = {
   'HARD_FLOOR': 'hard'
 };
 
-exports.CONFIG = {
+export const CONFIG = {
   'GLOBAL': 'global',
   'ADAPTERS': 'adapters',
   'COMMON': 'pwt',
@@ -117,7 +117,7 @@ exports.CONFIG = {
   'OW_GLOBAL_VAR_NAMESPACE': 'owGlobalVarNamespace'
 };
 
-exports.METADATA_MACROS = {
+export const METADATA_MACROS = {
   'WIDTH': '_W_',
   'HEIGHT': '_H_',
   'PARTNER': '_P_',
@@ -127,7 +127,7 @@ exports.METADATA_MACROS = {
   'PARTNER_COUNT': '_PC_'
 };
 
-exports.MACROS = {
+export const MACROS = {
   'WIDTH': '_W_',
   'HEIGHT': '_H_',
   'AD_UNIT_ID': '_AU_',
@@ -136,14 +136,14 @@ exports.MACROS = {
   'DIV': '_DIV_'
 };
 
-exports.SLOT_STATUS = {
+export const SLOT_STATUS = {
   'CREATED': 0,
   'PARTNERS_CALLED': 1,
   'TARGETING_ADDED': 2,
   'DISPLAYED': 3
 };
 
-exports.WRAPPER_TARGETING_KEYS = {
+export const WRAPPER_TARGETING_KEYS = {
   'BID_ID': 'pwtsid',
   'BID_STATUS': 'pwtbst',
   'BID_ECPM': 'pwtecp',
@@ -161,7 +161,7 @@ exports.WRAPPER_TARGETING_KEYS = {
   'CACHE_PATH': 'pwtcpath',
 };
 
-exports.IGNORE_PREBID_KEYS = {
+export const IGNORE_PREBID_KEYS = {
   'hb_bidder': 1,
   'hb_adid': 1,
   'hb_pb': 1,
@@ -174,14 +174,14 @@ exports.IGNORE_PREBID_KEYS = {
 };
 
 // todo: mention all params here and use accordigly
-exports.LOGGER_PIXEL_PARAMS = {
+export const LOGGER_PIXEL_PARAMS = {
   'TIMESTAMP': 'tst',
   'PAGE_URL': 'purl',
   'PAGE_DOMAIN': 'orig',
   'TIMEOUT': 'to'
 };
 
-exports.MESSAGES = {
+export const MESSAGES = {
   'M1': ': In fetchbids.',
   'M2': ': Throttled.',
   'M3': ': adapter must implement the fetchBids() function.',
@@ -224,43 +224,41 @@ exports.MESSAGES = {
   }
 };
 
-exports.PLATFORM_VALUES = {
+export const PLATFORM_VALUES = {
   'DISPLAY': 'display',
   'NATIVE': 'native',
   'VIDEO': 'video'
 };
 
-exports.FORMAT_VALUES = {
+export const FORMAT_VALUES = {
   'BANNER': 'banner',
   'VIDEO': 'video',
   'NATIVE': 'native',
   'OTHER': 'other'
 };
 
-exports.HOOKS = {
+export const HOOKS = {
   'PREBID_SET_CONFIG': 'HookForPrebidSetConfig',
   'PREBID_REQUEST_BIDS': 'HookForPrebidRequestBids',
   'BID_RECEIVED': 'HookForBidReceived',
   'POST_AUCTION_KEY_VALUES': 'HookForPostAuctionKeyValues'
 };
 
-exports.SRA_ENABLED_BIDDERS = {
+export const SRA_ENABLED_BIDDERS = {
   'rubicon': 1,
   'improvedigital': 2
 };
 
-exports.EXCLUDE_IDENTITY_PARAMS = ['rev_share', 'timeout', 'throttle'];
+export const EXCLUDE_IDENTITY_PARAMS = ['rev_share', 'timeout', 'throttle'];
+export const TOLOWERCASE_IDENTITY_PARAMS = ['storage.type'];
+export const JSON_VALUE_KEYS = ['params.clientIdentifier'];
 
-exports.TOLOWERCASE_IDENTITY_PARAMS = ['storage.type'];
-
-exports.JSON_VALUE_KEYS = ['params.clientIdentifier'];
-
-exports.AD_SERVER = {
+export const AD_SERVER = {
   'DFP': 'DFP',
   'CUSTOM': 'CUSTOM'
 };
 
-exports.SPECIAL_CASE_ID_PARTNERS = {
+export const SPECIAL_CASE_ID_PARTNERS = {
   'intentIqId': {
     'params.partner': 'number'
   },
@@ -287,7 +285,7 @@ exports.SPECIAL_CASE_ID_PARTNERS = {
   }
 }; // list of ID partners for whom special handling of datatype is required
 
-exports.ID_PARTNERS_CUSTOM_VALUES = {
+export const ID_PARTNERS_CUSTOM_VALUES = {
   'id5Id': [{
     'key': 'params.provider',
     'value': 'pubmatic-identity-hub'
@@ -299,40 +297,42 @@ exports.ID_PARTNERS_CUSTOM_VALUES = {
   }]
 };
 
-exports.EXCLUDE_PARTNER_LIST = ['pubProvidedId'];
+export const EXCLUDE_PARTNER_LIST = ['pubProvidedId'];
 
-exports.MEDIATYPE = {
+export const MEDIATYPE = {
   BANNER: 0,
   VIDEO: 1,
   NATIVE: 2
 };
 
-exports.BID_STATUS = {
+export const BID_STATUS = {
   BID_REJECTED: 'bidRejected'
-}
-// Add list of PubMatic aliases here.
-exports.PUBMATIC_ALIASES = ['pubmatic2'];
+};
 
-exports.PBSPARAMS = {
+// Add list of PubMatic aliases here.
+export const PUBMATIC_ALIASES = ['pubmatic2'];
+
+export const PBSPARAMS = {
   adapter: 'prebidServer',
   endpoint: 'https://ow.pubmatic.com/pbs/openrtb2/auction',
   syncEndpoint: 'https://ow.pubmatic.com/cookie_sync/?sec=1'
-}
+};
 
-exports.TIMEOUT_CONFIG = {
+export const TIMEOUT_CONFIG = {
   MaxTimeout: 500,
   MinTimeout: 200
-}
+};
 
-exports.DEFAULT_ALIASES = {
+export const DEFAULT_ALIASES = {
   adg: 'adgeneration',
   districtm: 'appnexus',
   districtmDMX: 'dmx',
   pubmatic2: 'pubmatic'
-}
-exports.YAHOOSSP = 'yahoossp';
+};
 
-exports.REGEX_BROWSERS = [/\b(?:crmo|crios)\/([\w\.]+)/i, /edg(?:e|ios|a)?\/([\w\.]+)/i, /(opera mini)\/([-\w\.]+)/i, /(opera [mobiletab]{3,6})\b.+version\/([-\w\.]+)/i, /(opera)(?:.+version\/|[\/ ]+)([\w\.]+)/i,
+export const YAHOOSSP = 'yahoossp';
+
+export const REGEX_BROWSERS = [/\b(?:crmo|crios)\/([\w\.]+)/i, /edg(?:e|ios|a)?\/([\w\.]+)/i, /(opera mini)\/([-\w\.]+)/i, /(opera [mobiletab]{3,6})\b.+version\/([-\w\.]+)/i, /(opera)(?:.+version\/|[\/ ]+)([\w\.]+)/i,
   /opios[\/ ]+([\w\.]+)/i, /\bopr\/([\w\.]+)/i, /(kindle)\/([\w\.]+)/i, /(lunascape)[\/ ]?([\w\.]*)/i, /(maxthon)[\/ ]?([\w\.]*)/i, /(netfront)[\/ ]?([\w\.]*)/i, /(jasmine)[\/ ]?([\w\.]*)/i, /(blazer)[\/ ]?([\w\.]*)/i,
   /(avant |iemobile|slim)(?:browser)?[\/ ]?([\w\.]*)/i, /(ba?idubrowser)[\/ ]?([\w\.]+)/i, /(?:ms|\()(ie) ([\w\.]+)/i, /(flock)\/([-\w\.]+)/i, /(rockmelt)\/([-\w\.]+)/i, /(midori)\/([-\w\.]+)/i, /(epiphany)\/([-\w\.]+)/i,
   /(silk)\/([-\w\.]+)/i, /(skyfire)\/([-\w\.]+)/i, /(ovibrowser)\/([-\w\.]+)/i, /(bolt)\/([-\w\.]+)/i, /(iron)\/([-\w\.]+)/i, /(vivaldi)\/([-\w\.]+)/i, /(iridium)\/([-\w\.]+)/i, /(phantomjs)\/([-\w\.]+)/i,
@@ -346,5 +346,6 @@ exports.REGEX_BROWSERS = [/\b(?:crmo|crios)\/([\w\.]+)/i, /edg(?:e|ios|a)?\/([\w
   /version\/([\w(\.|\,)]+) .*(mobile ?safari|safari)/i, /webkit.+?(mobile ?safari|safari)(\/[\w\.]+)/i, /(navigator|netscape\d?)\/([-\w\.]+)/i, /mobile vr; rv:([\w\.]+)\).+firefox/i, /ekiohf.+(flow)\/([\w\.]+)/i, /(swiftfox)/i,
   /(icedragon|iceweasel|camino|chimera|fennec|maemo browser|minimo|conkeror|klar)[\/ ]?([\w\.\+]+)/i, /(seamonkey|k-meleon|icecat|iceape|firebird|phoenix|palemoon|basilisk|waterfox)\/([-\w\.]+)$/i,
   /(firefox)\/([\w\.]+)/i, /(mozilla)\/([\w\.]+) .+rv\:.+gecko\/\d+/i, /(polaris|lynx|dillo|icab|doris|amaya|w3m|netsurf|sleipnir|obigo|mosaic|(?:go|ice|up)[\. ]?browser)[-\/ ]?v?([\w\.]+)/i, /(links) \(([\w\.]+)/i];
-exports.BROWSER_MAPPING = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 42, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64,
+
+export const BROWSER_MAPPING = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 42, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64,
   65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90];
