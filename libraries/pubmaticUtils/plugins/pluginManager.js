@@ -2,16 +2,15 @@ import { logError } from "../../../src/utils.js";
 
 // pluginManager.js
 const plugins = new Map();
-let CONSTANTS;
+export const CONSTANTS = Object.freeze({
+  LOG_PRE_FIX: 'PubMatic-Plugin-Manager: '
+});
 
 /**
  * Initialize the plugin manager with constants
- * @param {Object} constants - Constants object
  * @returns {Object} - Plugin manager functions
  */
-export function PluginManager(constants) {
-  CONSTANTS = constants;
-  
+export function PluginManager() {
   return {
     register,
     initialize,
@@ -28,6 +27,7 @@ export function PluginManager(constants) {
 function register(name, plugin) {
   if (plugins.has(name)) {
     logError(`${CONSTANTS.LOG_PRE_FIX} Plugin ${name} already registered`);
+    return;
   }
   plugins.set(name, plugin);
   return { register, initialize, executeHook };
@@ -44,7 +44,7 @@ async function initialize(result) {
   // Initialize each plugin with its specific config
   for (const [name, plugin] of plugins.entries()) {
     if (result.config.plugins && result.config.plugins[name] && plugin.init) {
-      initPromises.push(plugin.init(result.config.plugins[name], CONSTANTS));
+      initPromises.push(plugin.init(result.config.plugins[name]));
     }
   }
   
@@ -55,14 +55,14 @@ async function initialize(result) {
  * Execute a hook on all registered plugins
  * @param {string} hookName - Name of the hook to execute
  * @param {...any} args - Arguments to pass to the hook
- * @returns {Promise<Array>} - Promise resolving to an array of results
+ * @returns {Promise<Object>} - Promise resolving to an object of results
  */
 async function executeHook(hookName, ...args) {
-  const results = [];
+  const results = {};
   
-  for (const [_, plugin] of plugins.entries()) {
+  for (const [name, plugin] of plugins.entries()) {
     if (typeof plugin[hookName] === 'function') {
-      results.push(await plugin[hookName](...args));
+      results[name] = await plugin[hookName](...args);
     }
   }
   

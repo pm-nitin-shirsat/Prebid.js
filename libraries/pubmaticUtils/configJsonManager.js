@@ -3,16 +3,21 @@ import { logError } from '../../src/utils.js';
 import { isPlainObject, isEmpty } from '../../src/utils.js';
 
 let config = {};
-let CONSTANTS;
 let country;
+
+export const CONSTANTS = Object.freeze({ 
+  LOG_PRE_FIX: 'PubMatic-Config-Manager: ',
+  ENDPOINTS: {
+    BASEURL: 'https://ads.pubmatic.com/AdServer/js/pwt',
+    CONFIGS: 'config.json'
+  }
+});
 
 /**
  * Initialize the config manager with constants
- * @param {Object} constants - Constants object
  * @returns {Object} - Config manager functions
  */
-export function ConfigJsonManager(constants) {
-  CONSTANTS = constants;
+export function ConfigJsonManager() {
   
   return {
     fetchConfig,

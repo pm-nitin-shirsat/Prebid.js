@@ -1,26 +1,29 @@
 // plugins/floorProvider/index.js
 import { continueAuction } from '../../../modules/priceFloors.js';
-import { logInfo, logError } from '../../../src/utils.js';
-import { getDeviceType as fetchDeviceType, getOS } from '../../../libraries/userAgentUtils/index.js';
-import { getBrowserType, getCurrentTimeOfDay } from '../../../libraries/pubmaticUtils/pubmaticUtils.js';
+import { logInfo, logError, isFn, logMessage } from '../../../src/utils.js';
+import { getDeviceType as fetchDeviceType, getOS } from '../../userAgentUtils/index.js';
+import { getBrowserType, getCurrentTimeOfDay, getUtmValue } from '../pubmaticUtils.js';
 import { config as conf } from '../../../src/config.js';
 import { ConfigJsonManager } from '../configJsonManager.js';
 
-let CONSTANTS = null;
 let floorConfig = null;
+const CONSTANTS = Object.freeze({
+  LOG_PRE_FIX: 'PubMatic-Floor-Provider: '
+});
 
 /**
  * Initialize the floor provider
  * @param {Object} floorConfig - Floor configuration
- * @param {Object} constants - Constants object
  * @returns {Promise<boolean>} - Promise resolving to initialization status
  */
-export async function init(floorProviderConfig, constants) {
-  CONSTANTS = constants;
-  
+export async function init(floorProviderConfig) {
   // Process floor-specific configuration
   floorConfig =floorProviderConfig;
-  try {
+  if (!isFn(continueAuction)) {
+    logError(`${CONSTANTS.LOG_PRE_FIX} continueAuction is not a function. Please ensure to add priceFloors module.`);
+    return false;
+  }
+  try { 
     conf.setConfig(setFloorsConfig());
     logMessage(`${CONSTANTS.LOG_PRE_FIX} dynamicFloors config set successfully`);
   } catch (error) {
@@ -65,10 +68,12 @@ export async function processBidRequest(reqBidsConfigObj) {
 /**
  * Get targeting data
  * @param {Array} adUnitCodes - Ad unit codes
+ * @param {Object} config - Module configuration
+ * @param {Object} userConsent - User consent data
  * @param {Object} auction - Auction object
  * @returns {Object} - Targeting data
  */
-export function getTargeting(adUnitCodes, auction) {
+export function getTargeting(adUnitCodes, config, userConsent, auction) {
   // Implementation for targeting data, if not applied then do nothing
 }
 
@@ -79,6 +84,16 @@ export const FloorProvider = {
   getTargeting
 };
 
+// Helper Functions
+
+export const defaultValueTemplate = {
+  currency: 'USD',
+  skipRate: 0,
+  schema: {
+      fields: ['mediaType', 'size']
+  }
+};
+
 // Getter Functions
 export const getTimeOfDay = () => getCurrentTimeOfDay();
 export const getBrowser = () => getBrowserType();
@@ -86,28 +101,31 @@ export const getOs = () => getOS().toString();
 export const getDeviceType = () => fetchDeviceType().toString();
 export const getCountry = () => ConfigJsonManager.country;
 export const getBidder = (request) => request?.bidder;
+export const getUtm = () => getUtmValue();
+
 
 export const setFloorsConfig = () => {
+    // TODO: This can be removed as it is beimg used for UTR only and handled for multipliers in name: 'floor.json', for UPR it is handled in 
     // Extract multipliers from floors.json if available
-    if (floorConfig?.data?.multiplier) {
-      // Map of source keys to destination keys
-      const multiplierKeys = {
-        'win': 'WIN',
-        'floored': 'FLOORED',
-        'nobid': 'NOBID'
-      };
+    // if (floorConfig?.data?.multiplier) {
+    //   // Map of source keys to destination keys
+    //   const multiplierKeys = {
+    //     'win': 'WIN',
+    //     'floored': 'FLOORED',
+    //     'nobid': 'NOBID'
+    //   };
 
-      // Initialize _multipliers and only add keys that exist in data.multiplier
-      _multipliers = Object.entries(multiplierKeys)
-        .reduce((acc, [srcKey, destKey]) => {
-          if (srcKey in floorConfig.data.multiplier) {
-            acc[destKey] = floorConfig.data.multiplier[srcKey];
-          }
-          return acc;
-        }, {});
+    //   // Initialize _multipliers and only add keys that exist in data.multiplier
+    //   const _multipliers = Object.entries(multiplierKeys)
+    //     .reduce((acc, [srcKey, destKey]) => {
+    //       if (srcKey in floorConfig.data.multiplier) {
+    //         acc[destKey] = floorConfig.data.multiplier[srcKey];
+    //       }
+    //       return acc;
+    //     }, {});
 
-      logInfo(CONSTANTS.LOG_PRE_FIX, `Using multipliers from floors.json: ${JSON.stringify(_multipliers)}`);
-    }
+    //   logInfo(CONSTANTS.LOG_PRE_FIX, `Using multipliers from floors.json: ${JSON.stringify(_multipliers)}`);
+    // }
 
     if (!floorConfig?.enabled || !floorConfig?.config) {
       return undefined;
